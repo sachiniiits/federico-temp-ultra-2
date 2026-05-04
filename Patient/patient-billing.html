@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="auth-guard.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bills - Federico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="patient-billing.css" />  
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">F</div>
+      <div class="brand-text">
+        <strong>Federico</strong>
+        <span>Hospital Admin</span>
+      </div>
+    </div>
+
+    <nav class="main-nav">
+      <button class="nav-link" type="button" id="nav-dashboard">Dashboard</button>
+      <button class="nav-link" type="button" id="nav-book">Book Appointment</button>
+      <button class="nav-link active" type="button" id="nav-bill">My Bill</button>
+      <button class="nav-link" type="button" id="nav-profile">My Profile</button>
+    </nav>
+
+    <div class="topbar-right">
+      <button class="user-chip" type="button" id="profile-chip" aria-label="Go to My Profile">
+        <div class="user-avatar" id="bill-avatar">P</div>
+        <div class="user-meta">
+          <strong id="bill-topbar-name">Patient</strong>
+          <span>Patient</span>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <main class="billing-page">
+    <div class="page-header">
+      <div>
+        <h1>My Bills</h1>
+        <p>Track your billing, receipts, discharge summary, and EOD bill documents.</p>
+      </div>
+    </div>
+
+    <section class="kpi-grid">
+      <article class="kpi-card">
+        <p class="kpi-label">Total Billed</p>
+        <h2 class="kpi-value" id="kpi-total-billed">Rs 0</h2>
+        <span class="kpi-sub" id="kpi-total-billed-sub">0 documents</span>
+      </article>
+      <article class="kpi-card">
+        <p class="kpi-label">Paid</p>
+        <h2 class="kpi-value success" id="kpi-paid">Rs 0</h2>
+        <span class="kpi-sub" id="kpi-paid-sub">0 receipts</span>
+      </article>
+      <article class="kpi-card">
+        <p class="kpi-label">Pending</p>
+        <h2 class="kpi-value danger" id="kpi-pending">Rs 0</h2>
+        <span class="kpi-sub" id="kpi-pending-sub">0 payment links</span>
+      </article>
+      <article class="kpi-card">
+        <p class="kpi-label">Visits Count</p>
+        <h2 class="kpi-value primary" id="kpi-visits">0</h2>
+        <span class="kpi-sub" id="kpi-visits-sub">Recent care interactions</span>
+      </article>
+    </section>
+
+    <section class="bills-section">
+      <div class="bills-header">
+        <h2>Patient Billing Sections</h2>
+        <div class="filter-tabs">
+          <button class="filter-tab active" type="button" data-section="receipts">Receipts</button>
+          <button class="filter-tab" type="button" data-section="discharge">Discharge Summary</button>
+          <button class="filter-tab" type="button" data-section="eod">EOD Bills</button>
+        </div>
+      </div>
+
+      <div id="section-receipts" class="billing-section"></div>
+      <div id="section-discharge" class="billing-section hidden"></div>
+      <div id="section-eod" class="billing-section hidden"></div>
+    </section>
+  </main>
+
+  <script src="../shared/constants.js"></script>
+  <script src="../shared/canonical-seed.js"></script>
+  <script src="../shared/id-generator.js"></script>
+  <script src="../shared/patient-resolver.js"></script>
+  <script src="../shared/sanitizer.js"></script>
+  <script src="../shared/ledger-validator.js"></script>
+  <script src="../shared/finance-states.js"></script>
+  <script src="../shared/insurance.js"></script>
+  <script src="../shared/rbac.js"></script>
+  <script src="../shared/api-client.js"></script>
+  <script src="js/patient-store.js"></script>
+  <script src="patient-billing.js"></script>
+</body>
+</html>
