@@ -10,40 +10,30 @@ export class DataController {
   constructor(private readonly dataService: DataService) {}
 
   @Get('full-state')
-  @ApiOperation({ summary: 'Get the full in-memory state' })
+  @ApiOperation({ summary: 'Get the full in-memory state representing the DB schema' })
   getFullState() {
-    const admCount  = Object.keys(this.dataService.admissions || {}).length;
-    const preCount  = (this.dataService.preRequests || []).length;
-    const dspCount  = (this.dataService.dispatchQueue || []).length;
-    this.logger.log(
-      `📤 STATE PULLED  | admissions=${admCount}  preRequests=${preCount}  dispatchQueue=${dspCount}`
-    );
+    this.logger.log(`📤 STATE PULLED`);
     return {
-      stateVersion:           this.dataService.stateVersion,
-      stats:                  this.dataService.stats,
-      doctors:                this.dataService.doctors,
-      wards:                  this.dataService.wards,
-      inventoryItems:         this.dataService.inventoryItems,
-      activityLog:            this.dataService.activityLog,
-      patientDirectory:       this.dataService.patientDirectory,
-      patientProfiles:        this.dataService.patientProfiles,
-      preRequests:            this.dataService.preRequests,
-      pendingAdmissions:      this.dataService.pendingAdmissions,
-      patients:               this.dataService.patients,
-      admissions:             this.dataService.admissions,
-      ledgers:                this.dataService.ledgers,
-      faLedgerRequests:       this.dataService.faLedgerRequests,
-      serviceRequests:        this.dataService.serviceRequests,
-      billingRecords:         this.dataService.billingRecords,
-      dispatchQueue:          this.dataService.dispatchQueue,
-      paymentConfirmations:   this.dataService.paymentConfirmations,
-      receipts:               this.dataService.receipts,
-      publishedBills:         this.dataService.publishedBills,
-      bedRequests:            this.dataService.bedRequests,
-      bedAllocations:         this.dataService.bedAllocations,
-      emergencyNotifications: this.dataService.emergencyNotifications,
-      currentPatientId:       this.dataService.currentPatientId,
-      appointments:           this.dataService.appointments,
+      stateVersion: this.dataService.stateVersion,
+      roles: this.dataService.roles,
+      users: this.dataService.users,
+      patients: this.dataService.patients,
+      patientInsurances: this.dataService.patientInsurances,
+      patientInsuranceDocuments: this.dataService.patientInsuranceDocuments,
+      doctors: this.dataService.doctors,
+      doctorAvailabilities: this.dataService.doctorAvailabilities,
+      appointments: this.dataService.appointments,
+      wards: this.dataService.wards,
+      beds: this.dataService.beds,
+      admissions: this.dataService.admissions,
+      dischargeSummaries: this.dataService.dischargeSummaries,
+      services: this.dataService.services,
+      ledgers: this.dataService.ledgers,
+      ledgerEntries: this.dataService.ledgerEntries,
+      insurances: this.dataService.insurances,
+      payments: this.dataService.payments,
+      inventoryItems: this.dataService.inventoryItems,
+      purchaseRequests: this.dataService.purchaseRequests,
     };
   }
 
@@ -52,31 +42,26 @@ export class DataController {
   updateFullState(@Body() state: any) {
     const changed: string[] = [];
 
-    if (state.stateVersion)          { this.dataService.stateVersion          = state.stateVersion;          changed.push('stateVersion'); }
-    if (state.stats)                 { this.dataService.stats                 = state.stats;                 changed.push('stats'); }
-    if (state.doctors)               { this.dataService.doctors               = state.doctors;               changed.push(`doctors(${state.doctors.length})`); }
-    if (state.wards)                 { this.dataService.wards                 = state.wards;                 changed.push(`wards(${state.wards.length})`); }
-    if (state.inventoryItems)        { this.dataService.inventoryItems        = state.inventoryItems;        changed.push(`inventory(${state.inventoryItems.length})`); }
-    if (state.activityLog)           { this.dataService.activityLog           = state.activityLog;           changed.push(`activityLog(${state.activityLog.length})`); }
-    if (state.patientDirectory)      { this.dataService.patientDirectory      = state.patientDirectory;      changed.push(`patientDir(${state.patientDirectory.length})`); }
-    if (state.patientProfiles)       { this.dataService.patientProfiles       = state.patientProfiles;       changed.push('profiles'); }
-    if (state.preRequests)           { this.dataService.preRequests           = state.preRequests;           changed.push(`preRequests(${state.preRequests.length})`); }
-    if (state.pendingAdmissions)     { this.dataService.pendingAdmissions     = state.pendingAdmissions;     changed.push(`pendingAdm(${state.pendingAdmissions.length})`); }
-    if (state.patients)              { this.dataService.patients              = state.patients;              changed.push(`patients(${state.patients.length})`); }
-    if (state.admissions)            { this.dataService.admissions            = state.admissions;            changed.push(`admissions(${Object.keys(state.admissions).length})`); }
-    if (state.ledgers)               { this.dataService.ledgers               = state.ledgers;               changed.push(`ledgers(${Object.keys(state.ledgers).length})`); }
-    if (state.faLedgerRequests)      { this.dataService.faLedgerRequests      = state.faLedgerRequests;      changed.push(`faLedger(${state.faLedgerRequests.length})`); }
-    if (state.serviceRequests)       { this.dataService.serviceRequests       = state.serviceRequests;       changed.push(`svcReq(${state.serviceRequests.length})`); }
-    if (state.billingRecords)        { this.dataService.billingRecords        = state.billingRecords;        changed.push(`billingRec(${state.billingRecords.length})`); }
-    if (state.dispatchQueue)         { this.dataService.dispatchQueue         = state.dispatchQueue;         changed.push(`dispatch(${state.dispatchQueue.length})`); }
-    if (state.paymentConfirmations)  { this.dataService.paymentConfirmations  = state.paymentConfirmations;  changed.push(`payments(${state.paymentConfirmations.length})`); }
-    if (state.receipts)              { this.dataService.receipts              = state.receipts;              changed.push(`receipts(${state.receipts.length})`); }
-    if (state.publishedBills)        { this.dataService.publishedBills        = state.publishedBills;        changed.push(`bills(${state.publishedBills.length})`); }
-    if (state.bedRequests)           { this.dataService.bedRequests           = state.bedRequests;           changed.push(`bedReq(${state.bedRequests.length})`); }
-    if (state.bedAllocations)        { this.dataService.bedAllocations        = state.bedAllocations;        changed.push(`bedAlloc(${state.bedAllocations.length})`); }
-    if (state.emergencyNotifications){ this.dataService.emergencyNotifications= state.emergencyNotifications;changed.push(`emergency(${state.emergencyNotifications.length})`); }
-    if (state.currentPatientId)      { this.dataService.currentPatientId      = state.currentPatientId;      changed.push(`currentPt=${state.currentPatientId}`); }
-    if (state.appointments)          { this.dataService.appointments          = state.appointments;          changed.push(`appts(${state.appointments.length})`); }
+    if (state.stateVersion) { this.dataService.stateVersion = state.stateVersion; changed.push('stateVersion'); }
+    if (state.roles) { this.dataService.roles = state.roles; changed.push('roles'); }
+    if (state.users) { this.dataService.users = state.users; changed.push(`users(${state.users.length})`); }
+    if (state.patients) { this.dataService.patients = state.patients; changed.push(`patients(${state.patients.length})`); }
+    if (state.patientInsurances) { this.dataService.patientInsurances = state.patientInsurances; changed.push(`patientInsurances`); }
+    if (state.patientInsuranceDocuments) { this.dataService.patientInsuranceDocuments = state.patientInsuranceDocuments; changed.push(`patientInsuranceDocuments`); }
+    if (state.doctors) { this.dataService.doctors = state.doctors; changed.push(`doctors(${state.doctors.length})`); }
+    if (state.doctorAvailabilities) { this.dataService.doctorAvailabilities = state.doctorAvailabilities; changed.push(`doctorAvailabilities`); }
+    if (state.appointments) { this.dataService.appointments = state.appointments; changed.push(`appointments(${state.appointments.length})`); }
+    if (state.wards) { this.dataService.wards = state.wards; changed.push(`wards(${state.wards.length})`); }
+    if (state.beds) { this.dataService.beds = state.beds; changed.push(`beds(${state.beds.length})`); }
+    if (state.admissions) { this.dataService.admissions = state.admissions; changed.push(`admissions(${state.admissions.length})`); }
+    if (state.dischargeSummaries) { this.dataService.dischargeSummaries = state.dischargeSummaries; changed.push(`dischargeSummaries`); }
+    if (state.services) { this.dataService.services = state.services; changed.push(`services`); }
+    if (state.ledgers) { this.dataService.ledgers = state.ledgers; changed.push(`ledgers`); }
+    if (state.ledgerEntries) { this.dataService.ledgerEntries = state.ledgerEntries; changed.push(`ledgerEntries`); }
+    if (state.insurances) { this.dataService.insurances = state.insurances; changed.push(`insurances`); }
+    if (state.payments) { this.dataService.payments = state.payments; changed.push(`payments`); }
+    if (state.inventoryItems) { this.dataService.inventoryItems = state.inventoryItems; changed.push(`inventoryItems`); }
+    if (state.purchaseRequests) { this.dataService.purchaseRequests = state.purchaseRequests; changed.push(`purchaseRequests`); }
 
     this.logger.log(`📥 STATE PUSHED  | updated: ${changed.join(', ') || 'nothing'}`);
     return { success: true };

@@ -1,41 +1,63 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataService } from '../data/data.service';
+import { CreateDoctorDto, CreateDoctorAvailabilityDto } from './create-doctor.dto';
 
 @Injectable()
 export class DoctorService {
   constructor(private dataService: DataService) {}
 
-  findAll() {
+  // DOCTOR Operations
+  findAllDoctors() {
     return this.dataService.doctors;
   }
 
-  findOne(id: string) {
-    const doctor = this.dataService.doctors.find((d) => d.id === id);
-    if (!doctor) throw new NotFoundException(`Doctor with ID ${id} not found`);
-    return doctor;
+  findDoctorById(doctor_id: number) {
+    return this.dataService.doctors.find((d) => d.doctor_id === doctor_id) || null;
   }
 
-  create(doctor: any) {
+  createDoctor(doctor: CreateDoctorDto) {
     const newDoctor = {
-      id: `D${Date.now()}`,
-      status: 'Available',
-      ...doctor,
+      doctor_id: this.dataService.doctors.length > 0 ? Math.max(...this.dataService.doctors.map(d => d.doctor_id)) + 1 : 401,
+      ...doctor
     };
     this.dataService.doctors.push(newDoctor);
     return newDoctor;
   }
 
-  update(id: string, updateDoctor: any) {
-    const index = this.dataService.doctors.findIndex((d) => d.id === id);
-    if (index === -1) throw new NotFoundException(`Doctor with ID ${id} not found`);
-    this.dataService.doctors[index] = { ...this.dataService.doctors[index], ...updateDoctor };
-    return this.dataService.doctors[index];
+  updateDoctor(doctor_id: number, update: Partial<CreateDoctorDto>) {
+    const doc = this.findDoctorById(doctor_id);
+    if (!doc) return null;
+    Object.assign(doc, update);
+    return doc;
   }
 
-  remove(id: string) {
-    const index = this.dataService.doctors.findIndex((d) => d.id === id);
-    if (index === -1) throw new NotFoundException(`Doctor with ID ${id} not found`);
-    const removed = this.dataService.doctors.splice(index, 1);
-    return removed[0];
+  deleteDoctor(doctor_id: number) {
+    const initialLen = this.dataService.doctors.length;
+    this.dataService.doctors = this.dataService.doctors.filter(d => d.doctor_id !== doctor_id);
+    return { deleted: initialLen > this.dataService.doctors.length };
+  }
+
+  // DOCTOR_AVAILABILITY Operations
+  findAllAvailabilities() {
+    return this.dataService.doctorAvailabilities;
+  }
+
+  findAvailabilityByDoctor(doctor_id: number) {
+    return this.dataService.doctorAvailabilities.filter(a => a.doctor_id === doctor_id);
+  }
+
+  createAvailability(availability: CreateDoctorAvailabilityDto) {
+    const newAvail = {
+      availability_id: this.dataService.doctorAvailabilities.length > 0 ? Math.max(...this.dataService.doctorAvailabilities.map(a => a.availability_id)) + 1 : 501,
+      ...availability
+    };
+    this.dataService.doctorAvailabilities.push(newAvail);
+    return newAvail;
+  }
+
+  deleteAvailability(availability_id: number) {
+    const initialLen = this.dataService.doctorAvailabilities.length;
+    this.dataService.doctorAvailabilities = this.dataService.doctorAvailabilities.filter(a => a.availability_id !== availability_id);
+    return { deleted: initialLen > this.dataService.doctorAvailabilities.length };
   }
 }

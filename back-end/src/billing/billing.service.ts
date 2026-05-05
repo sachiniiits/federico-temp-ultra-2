@@ -1,49 +1,99 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataService } from '../data/data.service';
+import { 
+  CreateServiceDto, CreateLedgerDto, CreateLedgerEntryDto, 
+  CreatePaymentDto, CreateDischargeSummaryDto 
+} from './dto/billing.dto';
 
 @Injectable()
 export class BillingService {
   constructor(private dataService: DataService) {}
 
-  findLedger(admissionId: number) {
-    const ledger = this.dataService.ledgers[admissionId];
-    if (!ledger) throw new NotFoundException(`Ledger for admission ${admissionId} not found`);
-    return ledger;
+  // SERVICE
+  findAllServices() {
+    return this.dataService.services;
   }
 
-  addLedgerEntry(admissionId: number, entry: any) {
-    if (!this.dataService.ledgers[admissionId]) {
-      this.dataService.ledgers[admissionId] = [];
-    }
-    const newEntry = {
-      ...entry,
-      entry_id: entry.entry_id || Date.now(),
-      ts: entry.ts || Date.now(),
+  createService(service: CreateServiceDto) {
+    const newSvc = {
+      service_id: this.dataService.services.length > 0 ? Math.max(...this.dataService.services.map(s => s.service_id)) + 1 : 1,
+      ...service
     };
-    this.dataService.ledgers[admissionId].push(newEntry);
+    this.dataService.services.push(newSvc);
+    return newSvc;
+  }
+
+  // LEDGER
+  findAllLedgers() {
+    return this.dataService.ledgers;
+  }
+
+  findLedgerByAdmission(admission_id: number) {
+    return this.dataService.ledgers.find(l => l.admission_id === admission_id) || null;
+  }
+
+  createLedger(ledger: CreateLedgerDto) {
+    const newLedger = {
+      ledger_id: this.dataService.ledgers.length > 0 ? Math.max(...this.dataService.ledgers.map(l => l.ledger_id)) + 1 : 801,
+      created_at: new Date().toISOString(),
+      ...ledger
+    };
+    this.dataService.ledgers.push(newLedger);
+    return newLedger;
+  }
+
+  // LEDGER_ENTRY
+  findLedgerEntries(ledger_id: number) {
+    return this.dataService.ledgerEntries.filter(e => e.ledger_id === ledger_id);
+  }
+
+  addLedgerEntry(entry: CreateLedgerEntryDto) {
+    const newEntry = {
+      entry_id: this.dataService.ledgerEntries.filter(e => e.ledger_id === entry.ledger_id).length + 1,
+      entry_time: new Date().toISOString(),
+      ...entry
+    };
+    this.dataService.ledgerEntries.push(newEntry);
     return newEntry;
   }
 
-  createReceipt(receipt: any) {
-    const newReceipt = {
-      ...receipt,
-      id: receipt.id || 900 + this.dataService.receipts.length + 1,
-      ts: receipt.ts || Date.now(),
-    };
-    this.dataService.receipts.push(newReceipt);
-    return newReceipt;
+  // PAYMENT
+  findAllPayments() {
+    return this.dataService.payments;
   }
 
-  createDischargeSummary(admissionId: number, summary: any) {
-    if (!this.dataService.admissions[admissionId]) throw new NotFoundException(`Admission ${admissionId} not found`);
-    this.dataService.admissions[admissionId].dischargeSummary = {
-      ...summary,
-      ts: Date.now(),
+  createPayment(payment: CreatePaymentDto) {
+    const newPayment = {
+      payment_id: this.dataService.payments.length > 0 ? Math.max(...this.dataService.payments.map(p => p.payment_id)) + 1 : 901,
+      payment_time: new Date().toISOString(),
+      ...payment
     };
-    return this.dataService.admissions[admissionId].dischargeSummary;
+    this.dataService.payments.push(newPayment);
+
+    // Automatically confirm payment and notify HOM
+    const ledger = this.dataService.ledgers.find(l => l.ledger_id === payment.ledger_id);
+    if (ledger) {
+      ledger.status = 'PAID';
+      
+      const admission = this.dataService.admissions.find(a => a.admission_id === ledger.admission_id);
+      if (admission) {
+        // Flag for HOM to recognize payment is confirmed
+        (admission as any).receipt_sent_to_hom = true;
+        admission.status = 'PAYMENT_CONFIRMED';
+      }
+    }
+
+    return newPayment;
   }
 
-  findAllReceipts() {
-    return this.dataService.receipts;
+  // DISCHARGE_SUMMARY
+  createDischargeSummary(summary: CreateDischargeSummaryDto) {
+    const newSummary = {
+      summary_id: this.dataService.dischargeSummaries.length > 0 ? Math.max(...this.dataService.dischargeSummaries.map(s => s.summary_id)) + 1 : 1,
+      generated_at: new Date().toISOString(),
+      ...summary
+    };
+    this.dataService.dischargeSummaries.push(newSummary);
+    return newSummary;
   }
 }

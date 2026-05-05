@@ -17,24 +17,27 @@ let RequestService = class RequestService {
     constructor(dataService) {
         this.dataService = dataService;
     }
-    findAllPreRequests() {
-        return this.dataService.preRequests;
+    findAll() {
+        return this.dataService.appointments;
     }
-    createPreRequest(request) {
-        const newRequest = {
-            ...request,
-            id: request.id || `PRE-REQ-${Date.now()}`,
-            appointmentId: request.appointmentId || `PRE-APT-${Date.now()}`,
+    findOne(id) {
+        return this.dataService.appointments.find(a => a.appointment_id === id) || null;
+    }
+    create(appointment) {
+        const newApt = {
+            appointment_id: this.dataService.appointments.length > 0 ? Math.max(...this.dataService.appointments.map(a => a.appointment_id)) + 1 : 601,
+            created_at: new Date().toISOString(),
+            ...appointment
         };
-        this.dataService.preRequests.push(newRequest);
-        return newRequest;
+        this.dataService.appointments.push(newApt);
+        return newApt;
     }
-    updatePreRequest(id, update) {
-        const index = this.dataService.preRequests.findIndex((r) => r.id === id);
-        if (index === -1)
-            throw new common_1.NotFoundException(`Request ${id} not found`);
-        this.dataService.preRequests[index] = { ...this.dataService.preRequests[index], ...update };
-        return this.dataService.preRequests[index];
+    update(id, update) {
+        const apt = this.findOne(id);
+        if (!apt)
+            return null;
+        Object.assign(apt, update);
+        return apt;
     }
 };
 exports.RequestService = RequestService;

@@ -1,28 +1,33 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataService } from '../data/data.service';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
 
 @Injectable()
 export class RequestService {
   constructor(private dataService: DataService) {}
 
-  findAllPreRequests() {
-    return this.dataService.preRequests;
+  findAll() {
+    return this.dataService.appointments;
   }
 
-  createPreRequest(request: any) {
-    const newRequest = {
-      ...request,
-      id: request.id || `PRE-REQ-${Date.now()}`,
-      appointmentId: request.appointmentId || `PRE-APT-${Date.now()}`,
+  findOne(id: number) {
+    return this.dataService.appointments.find(a => a.appointment_id === id) || null;
+  }
+
+  create(appointment: CreateAppointmentDto) {
+    const newApt = {
+      appointment_id: this.dataService.appointments.length > 0 ? Math.max(...this.dataService.appointments.map(a => a.appointment_id)) + 1 : 601,
+      created_at: new Date().toISOString(),
+      ...appointment
     };
-    this.dataService.preRequests.push(newRequest);
-    return newRequest;
+    this.dataService.appointments.push(newApt);
+    return newApt;
   }
 
-  updatePreRequest(id: string, update: any) {
-    const index = this.dataService.preRequests.findIndex((r) => r.id === id);
-    if (index === -1) throw new NotFoundException(`Request ${id} not found`);
-    this.dataService.preRequests[index] = { ...this.dataService.preRequests[index], ...update };
-    return this.dataService.preRequests[index];
+  update(id: number, update: Partial<CreateAppointmentDto>) {
+    const apt = this.findOne(id);
+    if (!apt) return null;
+    Object.assign(apt, update);
+    return apt;
   }
 }

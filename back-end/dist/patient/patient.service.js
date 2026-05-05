@@ -18,35 +18,46 @@ let PatientService = class PatientService {
         this.dataService = dataService;
     }
     findAll() {
-        return this.dataService.patientDirectory;
+        return this.dataService.patients;
     }
     findOne(id) {
-        const patient = this.dataService.patientDirectory.find((p) => p.id === id);
-        if (!patient)
-            throw new common_1.NotFoundException(`Patient with ID ${id} not found`);
-        return patient;
+        return this.dataService.patients.find(p => p.patient_id === +id || p.uhid === id) || null;
     }
-    create(createPatientDto) {
+    create(patient) {
         const newPatient = {
-            ...createPatientDto,
-            id: createPatientDto.id || `FED-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+            patient_id: this.dataService.patients.length > 0 ? Math.max(...this.dataService.patients.map(p => p.patient_id)) + 1 : 201,
+            created_at: new Date().toISOString(),
+            ...patient
         };
-        this.dataService.patientDirectory.push(newPatient);
+        this.dataService.patients.push(newPatient);
         return newPatient;
     }
-    update(id, updatePatient) {
-        const index = this.dataService.patientDirectory.findIndex((p) => p.id === id);
-        if (index === -1)
-            throw new common_1.NotFoundException(`Patient with ID ${id} not found`);
-        this.dataService.patientDirectory[index] = { ...this.dataService.patientDirectory[index], ...updatePatient };
-        return this.dataService.patientDirectory[index];
+    update(id, update) {
+        const patient = this.findOne(id);
+        if (!patient)
+            return null;
+        Object.assign(patient, update);
+        return patient;
     }
     remove(id) {
-        const index = this.dataService.patientDirectory.findIndex((p) => p.id === id);
-        if (index === -1)
-            throw new common_1.NotFoundException(`Patient with ID ${id} not found`);
-        const removed = this.dataService.patientDirectory.splice(index, 1);
-        return removed[0];
+        const initialLen = this.dataService.patients.length;
+        this.dataService.patients = this.dataService.patients.filter(p => p.patient_id !== +id && p.uhid !== id);
+        return { deleted: initialLen > this.dataService.patients.length };
+    }
+    findAllInsurances() {
+        return this.dataService.patientInsurances;
+    }
+    findInsuranceByPatient(patient_id) {
+        return this.dataService.patientInsurances.filter(i => i.patient_id === patient_id);
+    }
+    createInsurance(insurance) {
+        const newIns = {
+            insurance_id: this.dataService.patientInsurances.length > 0 ? Math.max(...this.dataService.patientInsurances.map(i => i.insurance_id)) + 1 : 301,
+            created_at: new Date().toISOString(),
+            ...insurance
+        };
+        this.dataService.patientInsurances.push(newIns);
+        return newIns;
     }
 };
 exports.PatientService = PatientService;

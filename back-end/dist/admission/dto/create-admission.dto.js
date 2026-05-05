@@ -9,69 +9,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateAdmissionDto = void 0;
+exports.UpdateAdmissionDto = exports.CreateAdmissionDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const class_validator_1 = require("class-validator");
 class CreateAdmissionDto {
-    admission_id;
-    ledger_id;
-    patient_name;
-    uhid;
-    ward_no;
-    doctor_assigned;
-    coverage;
-    insurance_provider;
-    discharged;
+    appointment_id;
+    patient_id;
+    bed_id;
+    admit_time;
+    discharge_time;
+    status;
 }
 exports.CreateAdmissionDto = CreateAdmissionDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 701, required: false }),
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)({ description: 'The appointment ID', example: 601 }),
     __metadata("design:type", Number)
-], CreateAdmissionDto.prototype, "admission_id", void 0);
+], CreateAdmissionDto.prototype, "appointment_id", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 801, required: false }),
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)({ description: 'The patient ID', example: 201 }),
     __metadata("design:type", Number)
-], CreateAdmissionDto.prototype, "ledger_id", void 0);
+], CreateAdmissionDto.prototype, "patient_id", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Rahul Verma' }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateAdmissionDto.prototype, "patient_name", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 'FED-2026-TEST01' }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateAdmissionDto.prototype, "uhid", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 'ICU-05' }),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreateAdmissionDto.prototype, "ward_no", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Dr. Qasim' }),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreateAdmissionDto.prototype, "doctor_assigned", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 1500 }),
-    (0, class_validator_1.IsNumber)(),
+    (0, swagger_1.ApiProperty)({ description: 'The bed ID', example: 11 }),
     __metadata("design:type", Number)
-], CreateAdmissionDto.prototype, "coverage", void 0);
+], CreateAdmissionDto.prototype, "bed_id", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Star Health' }),
-    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ description: 'Admission time', example: '2026-03-15T10:30:00Z', required: false }),
     __metadata("design:type", String)
-], CreateAdmissionDto.prototype, "insurance_provider", void 0);
+], CreateAdmissionDto.prototype, "admit_time", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: false, default: false }),
-    (0, class_validator_1.IsBoolean)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Boolean)
-], CreateAdmissionDto.prototype, "discharged", void 0);
+    (0, swagger_1.ApiProperty)({ description: 'Discharge time', example: '2026-03-18T10:00:00Z', required: false }),
+    __metadata("design:type", String)
+], CreateAdmissionDto.prototype, "discharge_time", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Status of admission', example: 'ADMITTED' }),
+    __metadata("design:type", String)
+], CreateAdmissionDto.prototype, "status", void 0);
+class UpdateAdmissionDto extends (0, swagger_1.PartialType)(CreateAdmissionDto) {
+}
+exports.UpdateAdmissionDto = UpdateAdmissionDto;
 //# sourceMappingURL=create-admission.dto.js.map

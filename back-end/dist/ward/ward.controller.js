@@ -17,25 +17,35 @@ const common_1 = require("@nestjs/common");
 const ward_service_1 = require("./ward.service");
 const swagger_1 = require("@nestjs/swagger");
 const roles_decorator_1 = require("../auth/roles.decorator");
+const create_ward_dto_1 = require("./create-ward.dto");
 let WardController = class WardController {
     wardService;
     logger = new common_1.Logger('🏨 Wards');
     constructor(wardService) {
         this.wardService = wardService;
     }
-    findAll() {
-        const wards = this.wardService.findAll();
-        this.logger.log(`📋 LIST ALL  total=${wards.length} wards`);
-        return wards;
+    findAllWards() {
+        return this.wardService.findAllWards();
     }
-    findBeds(name) {
-        const beds = this.wardService.findBeds(name);
-        this.logger.log(`🛏️  GET BEDS  ward="${name}"  total=${beds.length} beds`);
-        return beds;
+    createWard(ward) {
+        const result = this.wardService.createWard(ward);
+        this.logger.log(`✅ CREATED WARD  id=${result.ward_id}  name="${result.ward_name}"`);
+        return result;
     }
-    updateBed(name, bedNumber, body) {
-        const result = this.wardService.updateBedStatus(name, bedNumber, body.status, body.patient);
-        this.logger.log(`✏️  BED UPDATE  ward="${name}"  bed=${bedNumber}  status="${body.status}"${body.patient ? `  patient="${body.patient}"` : ''}`);
+    findAllBeds() {
+        return this.wardService.findAllBeds();
+    }
+    findBedsByWard(id) {
+        return this.wardService.findBedsByWard(+id);
+    }
+    createBed(bed) {
+        const result = this.wardService.createBed(bed);
+        this.logger.log(`✅ CREATED BED  id=${result.bed_id}  ward_id=${result.ward_id}  number=${result.bed_number}`);
+        return result;
+    }
+    updateBedStatus(bedId, body) {
+        const result = this.wardService.updateBedStatus(+bedId, body.status);
+        this.logger.log(`✏️  BED UPDATE  bed_id=${bedId}  status="${body.status}"`);
         return result;
     }
 };
@@ -43,34 +53,59 @@ exports.WardController = WardController;
 __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: 'Get all wards' }),
-    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER', 'OPERATIONS'),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], WardController.prototype, "findAll", null);
+], WardController.prototype, "findAllWards", null);
 __decorate([
-    (0, common_1.Get)(':name/beds'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get beds in a ward' }),
-    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER', 'OPERATIONS'),
-    __param(0, (0, common_1.Param)('name')),
+    (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new ward' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_ward_dto_1.CreateWardDto]),
+    __metadata("design:returntype", void 0)
+], WardController.prototype, "createWard", null);
+__decorate([
+    (0, common_1.Get)('beds'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all beds across all wards' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], WardController.prototype, "findAllBeds", null);
+__decorate([
+    (0, common_1.Get)(':id/beds'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get beds in a specific ward' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], WardController.prototype, "findBeds", null);
+], WardController.prototype, "findBedsByWard", null);
 __decorate([
-    (0, common_1.Put)(':name/bed/:bedNumber'),
-    (0, swagger_1.ApiOperation)({ summary: 'Update bed status' }),
-    (0, roles_decorator_1.Roles)('SUPER_USER', 'OPERATIONS'),
-    __param(0, (0, common_1.Param)('name')),
-    __param(1, (0, common_1.Param)('bedNumber')),
-    __param(2, (0, common_1.Body)()),
+    (0, common_1.Post)('bed'),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new bed' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [create_ward_dto_1.CreateBedDto]),
     __metadata("design:returntype", void 0)
-], WardController.prototype, "updateBed", null);
+], WardController.prototype, "createBed", null);
+__decorate([
+    (0, common_1.Put)('bed/:bedId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Update bed status' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __param(0, (0, common_1.Param)('bedId')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, create_ward_dto_1.UpdateBedStatusDto]),
+    __metadata("design:returntype", void 0)
+], WardController.prototype, "updateBedStatus", null);
 exports.WardController = WardController = __decorate([
     (0, swagger_1.ApiTags)('Wards'),
-    (0, swagger_1.ApiHeader)({ name: 'x-role', description: 'User role' }),
+    (0, swagger_1.ApiHeader)({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER)' }),
     (0, common_1.Controller)('ward'),
     __metadata("design:paramtypes", [ward_service_1.WardService])
 ], WardController);

@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Put, Param, Delete, Logger } from '@nestjs
 import { DoctorService } from './doctor.service';
 import { ApiTags, ApiOperation, ApiHeader } from '@nestjs/swagger';
 import { Roles } from '../auth/roles.decorator';
-import { CreateDoctorDto } from './create-doctor.dto';
+import { CreateDoctorDto, CreateDoctorAvailabilityDto, UpdateDoctorDto } from './create-doctor.dto';
 
 @ApiTags('Doctors')
-@ApiHeader({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER required for write operations)' })
+@ApiHeader({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER)' })
 @Controller('doctor')
 export class DoctorController {
   private readonly logger = new Logger('👨‍⚕️ Doctors');
@@ -14,44 +14,69 @@ export class DoctorController {
 
   @Get()
   @ApiOperation({ summary: 'Get all doctors' })
-  @Roles('ADMIN', 'SUPER_USER', 'OPERATIONS', 'PATIENT')
-  findAll() {
-    const doctors = this.doctorService.findAll();
-    this.logger.log(`📋 LIST ALL  total=${doctors.length} doctors`);
-    return doctors;
+  @Roles('ADMIN', 'SUPER_USER')
+  findAllDoctors() {
+    return this.doctorService.findAllDoctors();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a doctor by ID' })
-  @Roles('ADMIN', 'SUPER_USER', 'OPERATIONS', 'PATIENT')
-  findOne(@Param('id') id: string) {
-    this.logger.log(`🔍 GET  doctor_id=${id}`);
-    return this.doctorService.findOne(id);
+  @Roles('ADMIN', 'SUPER_USER')
+  findDoctor(@Param('id') id: string) {
+    return this.doctorService.findDoctorById(+id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a new doctor' })
   @Roles('ADMIN', 'SUPER_USER')
-  create(@Body() doctor: CreateDoctorDto) {
-    const result = this.doctorService.create(doctor);
-    this.logger.log(`✅ CREATED  id=${result.id}  name="${result.name}"  specialization="${result.specialization}"  status=${result.status}`);
+  createDoctor(@Body() doctor: CreateDoctorDto) {
+    const result = this.doctorService.createDoctor(doctor);
+    this.logger.log(`✅ CREATED DOCTOR  id=${result.doctor_id}  name="${result.name}"`);
     return result;
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a doctor' })
   @Roles('ADMIN', 'SUPER_USER')
-  update(@Param('id') id: string, @Body() doctor: CreateDoctorDto) {
-    const result = this.doctorService.update(id, doctor);
-    this.logger.log(`✏️  UPDATED  doctor_id=${id}  name="${doctor.name}"  status=${doctor.status}`);
-    return result;
+  updateDoctor(@Param('id') id: string, @Body() doctor: UpdateDoctorDto) {
+    return this.doctorService.updateDoctor(+id, doctor);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a doctor' })
   @Roles('ADMIN', 'SUPER_USER')
-  remove(@Param('id') id: string) {
-    this.logger.log(`🗑️  DELETED  doctor_id=${id}`);
-    return this.doctorService.remove(id);
+  deleteDoctor(@Param('id') id: string) {
+    return this.doctorService.deleteDoctor(+id);
+  }
+
+  // Availability Endpoints
+  @Get('availability/all')
+  @ApiOperation({ summary: 'Get all doctor availabilities' })
+  @Roles('ADMIN', 'SUPER_USER')
+  findAllAvailabilities() {
+    return this.doctorService.findAllAvailabilities();
+  }
+
+  @Get(':id/availability')
+  @ApiOperation({ summary: 'Get availability by doctor ID' })
+  @Roles('ADMIN', 'SUPER_USER')
+  findAvailabilityByDoctor(@Param('id') id: string) {
+    return this.doctorService.findAvailabilityByDoctor(+id);
+  }
+
+  @Post('availability')
+  @ApiOperation({ summary: 'Create a new doctor availability' })
+  @Roles('ADMIN', 'SUPER_USER')
+  createAvailability(@Body() availability: CreateDoctorAvailabilityDto) {
+    const result = this.doctorService.createAvailability(availability);
+    this.logger.log(`✅ CREATED AVAILABILITY  id=${result.availability_id}  doctor_id=${result.doctor_id}`);
+    return result;
+  }
+
+  @Delete('availability/:id')
+  @ApiOperation({ summary: 'Delete a doctor availability' })
+  @Roles('ADMIN', 'SUPER_USER')
+  deleteAvailability(@Param('id') id: string) {
+    return this.doctorService.deleteAvailability(+id);
   }
 }

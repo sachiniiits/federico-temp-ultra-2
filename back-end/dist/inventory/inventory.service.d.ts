@@ -1,42 +1,26 @@
 import { DataService } from '../data/data.service';
+import { CreateInventoryItemDto, CreatePurchaseRequestDto } from './dto/inventory.dto';
 export declare class InventoryService {
     private dataService;
     constructor(dataService: DataService);
-    findAll(): {
-        item_id: number;
-        name: string;
+    findAllItems(): any[];
+    createItem(item: CreateInventoryItemDto): {
+        item_name: string;
         category: string;
-        stock: number;
-        reorderLevel: number;
-        unit: string;
-        unitCost: number;
-    }[];
-    findOne(id: number): {
+        stock_quantity: number;
+        reorder_level: number;
+        service_id?: number;
         item_id: number;
-        name: string;
-        category: string;
-        stock: number;
-        reorderLevel: number;
-        unit: string;
-        unitCost: number;
     };
-    create(item: any): any;
-    update(id: number, updateItem: any): {
+    updateItem(item_id: number, update: Partial<CreateInventoryItemDto>): any;
+    findAllRequests(): any[];
+    createRequest(request: CreatePurchaseRequestDto): {
         item_id: number;
-        name: string;
-        category: string;
-        stock: number;
-        reorderLevel: number;
-        unit: string;
-        unitCost: number;
+        quantity_requested: number;
+        status: string;
+        requested_by: number;
+        request_id: number;
+        requested_at: string;
     };
-    remove(id: number): {
-        item_id: number;
-        name: string;
-        category: string;
-        stock: number;
-        reorderLevel: number;
-        unit: string;
-        unitCost: number;
-    };
+    updateRequest(request_id: number, update: Partial<CreatePurchaseRequestDto>): any;
 }

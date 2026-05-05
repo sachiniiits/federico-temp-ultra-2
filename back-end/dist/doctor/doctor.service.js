@@ -17,37 +17,50 @@ let DoctorService = class DoctorService {
     constructor(dataService) {
         this.dataService = dataService;
     }
-    findAll() {
+    findAllDoctors() {
         return this.dataService.doctors;
     }
-    findOne(id) {
-        const doctor = this.dataService.doctors.find((d) => d.id === id);
-        if (!doctor)
-            throw new common_1.NotFoundException(`Doctor with ID ${id} not found`);
-        return doctor;
+    findDoctorById(doctor_id) {
+        return this.dataService.doctors.find((d) => d.doctor_id === doctor_id) || null;
     }
-    create(doctor) {
+    createDoctor(doctor) {
         const newDoctor = {
-            id: `D${Date.now()}`,
-            status: 'Available',
-            ...doctor,
+            doctor_id: this.dataService.doctors.length > 0 ? Math.max(...this.dataService.doctors.map(d => d.doctor_id)) + 1 : 401,
+            ...doctor
         };
         this.dataService.doctors.push(newDoctor);
         return newDoctor;
     }
-    update(id, updateDoctor) {
-        const index = this.dataService.doctors.findIndex((d) => d.id === id);
-        if (index === -1)
-            throw new common_1.NotFoundException(`Doctor with ID ${id} not found`);
-        this.dataService.doctors[index] = { ...this.dataService.doctors[index], ...updateDoctor };
-        return this.dataService.doctors[index];
+    updateDoctor(doctor_id, update) {
+        const doc = this.findDoctorById(doctor_id);
+        if (!doc)
+            return null;
+        Object.assign(doc, update);
+        return doc;
     }
-    remove(id) {
-        const index = this.dataService.doctors.findIndex((d) => d.id === id);
-        if (index === -1)
-            throw new common_1.NotFoundException(`Doctor with ID ${id} not found`);
-        const removed = this.dataService.doctors.splice(index, 1);
-        return removed[0];
+    deleteDoctor(doctor_id) {
+        const initialLen = this.dataService.doctors.length;
+        this.dataService.doctors = this.dataService.doctors.filter(d => d.doctor_id !== doctor_id);
+        return { deleted: initialLen > this.dataService.doctors.length };
+    }
+    findAllAvailabilities() {
+        return this.dataService.doctorAvailabilities;
+    }
+    findAvailabilityByDoctor(doctor_id) {
+        return this.dataService.doctorAvailabilities.filter(a => a.doctor_id === doctor_id);
+    }
+    createAvailability(availability) {
+        const newAvail = {
+            availability_id: this.dataService.doctorAvailabilities.length > 0 ? Math.max(...this.dataService.doctorAvailabilities.map(a => a.availability_id)) + 1 : 501,
+            ...availability
+        };
+        this.dataService.doctorAvailabilities.push(newAvail);
+        return newAvail;
+    }
+    deleteAvailability(availability_id) {
+        const initialLen = this.dataService.doctorAvailabilities.length;
+        this.dataService.doctorAvailabilities = this.dataService.doctorAvailabilities.filter(a => a.availability_id !== availability_id);
+        return { deleted: initialLen > this.dataService.doctorAvailabilities.length };
     }
 };
 exports.DoctorService = DoctorService;

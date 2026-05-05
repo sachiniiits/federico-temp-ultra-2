@@ -1,39 +1,22 @@
 import { DataService } from '../data/data.service';
+import { CreateWardDto, CreateBedDto } from './create-ward.dto';
 export declare class WardService {
     private dataService;
     constructor(dataService: DataService);
-    findAll(): {
-        name: string;
-        total: number;
-        occupied: number;
-        available: number;
-        maintenance: number;
-        beds: ({
-            number: string;
-            status: string;
-            patient: string;
-        } | {
-            number: string;
-            status: string;
-            patient?: undefined;
-        })[];
-    }[];
-    findBeds(wardName: string): ({
-        number: string;
-        status: string;
-        patient: string;
-    } | {
-        number: string;
-        status: string;
-        patient?: undefined;
-    })[];
-    updateBedStatus(wardName: string, bedNumber: string, status: string, patient?: string): {
-        number: string;
-        status: string;
-        patient: string;
-    } | {
-        number: string;
-        status: string;
-        patient?: undefined;
+    findAllWards(): any[];
+    createWard(ward: CreateWardDto): {
+        ward_name: string;
+        total_beds: number;
+        description?: string;
+        ward_id: number;
     };
+    findAllBeds(): any[];
+    findBedsByWard(ward_id: number): any[];
+    createBed(bed: CreateBedDto): {
+        ward_id: number;
+        bed_number: string;
+        status: string;
+        bed_id: number;
+    };
+    updateBedStatus(bed_id: number, status: string): any;
 }

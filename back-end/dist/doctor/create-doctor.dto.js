@@ -9,47 +9,60 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateDoctorDto = void 0;
+exports.CreateDoctorAvailabilityDto = exports.UpdateDoctorDto = exports.CreateDoctorDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const class_validator_1 = require("class-validator");
 class CreateDoctorDto {
     name;
     specialization;
-    start;
-    end;
-    status;
+    phone;
+    email;
 }
 exports.CreateDoctorDto = CreateDoctorDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Dr. Smith', description: 'Full name of the doctor' }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({ description: 'The name of the doctor', example: 'Dr. Arjun Mehta' }),
     __metadata("design:type", String)
 ], CreateDoctorDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Cardiology', description: 'Doctor specialization' }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({ description: 'The specialization of the doctor', example: 'Cardiology' }),
     __metadata("design:type", String)
 ], CreateDoctorDto.prototype, "specialization", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '9:00 AM', description: 'Shift start time' }),
-    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ description: 'The phone number of the doctor', example: '8881112222' }),
     __metadata("design:type", String)
-], CreateDoctorDto.prototype, "start", void 0);
+], CreateDoctorDto.prototype, "phone", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '5:00 PM', description: 'Shift end time' }),
-    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ description: 'The email address of the doctor', example: 'arjun.m@hosp.com' }),
     __metadata("design:type", String)
-], CreateDoctorDto.prototype, "end", void 0);
+], CreateDoctorDto.prototype, "email", void 0);
+class UpdateDoctorDto extends (0, swagger_1.PartialType)(CreateDoctorDto) {
+}
+exports.UpdateDoctorDto = UpdateDoctorDto;
+class CreateDoctorAvailabilityDto {
+    doctor_id;
+    available_date;
+    start_time;
+    end_time;
+    status;
+}
+exports.CreateDoctorAvailabilityDto = CreateDoctorAvailabilityDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({
-        example: 'Available',
-        description: 'Doctor availability status',
-        enum: ['Available', 'Not Available'],
-        default: 'Available',
-    }),
-    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ description: 'The doctor ID', example: 401 }),
+    __metadata("design:type", Number)
+], CreateDoctorAvailabilityDto.prototype, "doctor_id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'The date of availability', example: '2026-03-15' }),
     __metadata("design:type", String)
-], CreateDoctorDto.prototype, "status", void 0);
+], CreateDoctorAvailabilityDto.prototype, "available_date", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'The start time of availability', example: '09:00:00' }),
+    __metadata("design:type", String)
+], CreateDoctorAvailabilityDto.prototype, "start_time", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'The end time of availability', example: '12:00:00' }),
+    __metadata("design:type", String)
+], CreateDoctorAvailabilityDto.prototype, "end_time", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'The status of availability', example: 'Available' }),
+    __metadata("design:type", String)
+], CreateDoctorAvailabilityDto.prototype, "status", void 0);
 //# sourceMappingURL=create-doctor.dto.js.map

@@ -18,34 +18,26 @@ let AdmissionService = class AdmissionService {
         this.dataService = dataService;
     }
     findAll() {
-        return Object.values(this.dataService.admissions);
+        return this.dataService.admissions;
     }
     findOne(id) {
-        const admission = this.dataService.admissions[id];
-        if (!admission)
-            throw new common_1.NotFoundException(`Admission ${id} not found`);
-        return admission;
+        return this.dataService.admissions.find(a => a.admission_id === id) || null;
     }
-    create(createAdmissionDto) {
-        const id = createAdmissionDto.admission_id || 700 + Object.keys(this.dataService.admissions).length + 1;
-        const ledger_id = createAdmissionDto.ledger_id || 800 + Object.keys(this.dataService.ledgers).length + 1;
+    create(admission) {
         const newAdmission = {
-            ...createAdmissionDto,
-            admission_id: id,
-            ledger_id: ledger_id,
-            discharged: createAdmissionDto.discharged || false,
+            admission_id: this.dataService.admissions.length > 0 ? Math.max(...this.dataService.admissions.map(a => a.admission_id)) + 1 : 701,
+            admit_time: admission.admit_time || new Date().toISOString(),
+            ...admission
         };
-        this.dataService.admissions[id] = newAdmission;
-        if (!this.dataService.ledgers[ledger_id]) {
-            this.dataService.ledgers[ledger_id] = [];
-        }
+        this.dataService.admissions.push(newAdmission);
         return newAdmission;
     }
     update(id, update) {
-        if (!this.dataService.admissions[id])
-            throw new common_1.NotFoundException(`Admission ${id} not found`);
-        this.dataService.admissions[id] = { ...this.dataService.admissions[id], ...update };
-        return this.dataService.admissions[id];
+        const admission = this.findOne(id);
+        if (!admission)
+            return null;
+        Object.assign(admission, update);
+        return admission;
     }
 };
 exports.AdmissionService = AdmissionService;

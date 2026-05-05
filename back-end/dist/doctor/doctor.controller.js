@@ -24,48 +24,56 @@ let DoctorController = class DoctorController {
     constructor(doctorService) {
         this.doctorService = doctorService;
     }
-    findAll() {
-        const doctors = this.doctorService.findAll();
-        this.logger.log(`📋 LIST ALL  total=${doctors.length} doctors`);
-        return doctors;
+    findAllDoctors() {
+        return this.doctorService.findAllDoctors();
     }
-    findOne(id) {
-        this.logger.log(`🔍 GET  doctor_id=${id}`);
-        return this.doctorService.findOne(id);
+    findDoctor(id) {
+        return this.doctorService.findDoctorById(+id);
     }
-    create(doctor) {
-        const result = this.doctorService.create(doctor);
-        this.logger.log(`✅ CREATED  id=${result.id}  name="${result.name}"  specialization="${result.specialization}"  status=${result.status}`);
+    createDoctor(doctor) {
+        const result = this.doctorService.createDoctor(doctor);
+        this.logger.log(`✅ CREATED DOCTOR  id=${result.doctor_id}  name="${result.name}"`);
         return result;
     }
-    update(id, doctor) {
-        const result = this.doctorService.update(id, doctor);
-        this.logger.log(`✏️  UPDATED  doctor_id=${id}  name="${doctor.name}"  status=${doctor.status}`);
+    updateDoctor(id, doctor) {
+        return this.doctorService.updateDoctor(+id, doctor);
+    }
+    deleteDoctor(id) {
+        return this.doctorService.deleteDoctor(+id);
+    }
+    findAllAvailabilities() {
+        return this.doctorService.findAllAvailabilities();
+    }
+    findAvailabilityByDoctor(id) {
+        return this.doctorService.findAvailabilityByDoctor(+id);
+    }
+    createAvailability(availability) {
+        const result = this.doctorService.createAvailability(availability);
+        this.logger.log(`✅ CREATED AVAILABILITY  id=${result.availability_id}  doctor_id=${result.doctor_id}`);
         return result;
     }
-    remove(id) {
-        this.logger.log(`🗑️  DELETED  doctor_id=${id}`);
-        return this.doctorService.remove(id);
+    deleteAvailability(id) {
+        return this.doctorService.deleteAvailability(+id);
     }
 };
 exports.DoctorController = DoctorController;
 __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: 'Get all doctors' }),
-    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER', 'OPERATIONS', 'PATIENT'),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], DoctorController.prototype, "findAll", null);
+], DoctorController.prototype, "findAllDoctors", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Get a doctor by ID' }),
-    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER', 'OPERATIONS', 'PATIENT'),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], DoctorController.prototype, "findOne", null);
+], DoctorController.prototype, "findDoctor", null);
 __decorate([
     (0, common_1.Post)(),
     (0, swagger_1.ApiOperation)({ summary: 'Create a new doctor' }),
@@ -74,7 +82,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_doctor_dto_1.CreateDoctorDto]),
     __metadata("design:returntype", void 0)
-], DoctorController.prototype, "create", null);
+], DoctorController.prototype, "createDoctor", null);
 __decorate([
     (0, common_1.Put)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Update a doctor' }),
@@ -82,9 +90,9 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, create_doctor_dto_1.CreateDoctorDto]),
+    __metadata("design:paramtypes", [String, create_doctor_dto_1.UpdateDoctorDto]),
     __metadata("design:returntype", void 0)
-], DoctorController.prototype, "update", null);
+], DoctorController.prototype, "updateDoctor", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Delete a doctor' }),
@@ -93,10 +101,45 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], DoctorController.prototype, "remove", null);
+], DoctorController.prototype, "deleteDoctor", null);
+__decorate([
+    (0, common_1.Get)('availability/all'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all doctor availabilities' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], DoctorController.prototype, "findAllAvailabilities", null);
+__decorate([
+    (0, common_1.Get)(':id/availability'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get availability by doctor ID' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], DoctorController.prototype, "findAvailabilityByDoctor", null);
+__decorate([
+    (0, common_1.Post)('availability'),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new doctor availability' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_doctor_dto_1.CreateDoctorAvailabilityDto]),
+    __metadata("design:returntype", void 0)
+], DoctorController.prototype, "createAvailability", null);
+__decorate([
+    (0, common_1.Delete)('availability/:id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete a doctor availability' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], DoctorController.prototype, "deleteAvailability", null);
 exports.DoctorController = DoctorController = __decorate([
     (0, swagger_1.ApiTags)('Doctors'),
-    (0, swagger_1.ApiHeader)({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER required for write operations)' }),
+    (0, swagger_1.ApiHeader)({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER)' }),
     (0, common_1.Controller)('doctor'),
     __metadata("design:paramtypes", [doctor_service_1.DoctorService])
 ], DoctorController);

@@ -867,6 +867,13 @@ window.Store = (function () {
       "Blood Test Panel",
       "CT Scan",
       "Physiotherapy Session",
+      "Ultrasound Abdomen",
+      "Surgery Theater Charges",
+      "Anesthesia Admin",
+      "ICU Ventilator Support",
+      "Dialysis Session",
+      "Specialist Consultation",
+      "Nursing Care Charges"
     ];
   }
 

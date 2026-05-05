@@ -1,40 +1,33 @@
 import { DoctorService } from './doctor.service';
-import { CreateDoctorDto } from './create-doctor.dto';
+import { CreateDoctorDto, CreateDoctorAvailabilityDto, UpdateDoctorDto } from './create-doctor.dto';
 export declare class DoctorController {
     private readonly doctorService;
     private readonly logger;
     constructor(doctorService: DoctorService);
-    findAll(): {
-        id: string;
+    findAllDoctors(): any[];
+    findDoctor(id: string): any;
+    createDoctor(doctor: CreateDoctorDto): {
         name: string;
         specialization: string;
-        start: string;
-        end: string;
-        status: string;
-    }[];
-    findOne(id: string): {
-        id: string;
-        name: string;
-        specialization: string;
-        start: string;
-        end: string;
-        status: string;
+        phone: string;
+        email: string;
+        doctor_id: number;
     };
-    create(doctor: CreateDoctorDto): any;
-    update(id: string, doctor: CreateDoctorDto): {
-        id: string;
-        name: string;
-        specialization: string;
-        start: string;
-        end: string;
-        status: string;
+    updateDoctor(id: string, doctor: UpdateDoctorDto): any;
+    deleteDoctor(id: string): {
+        deleted: boolean;
     };
-    remove(id: string): {
-        id: string;
-        name: string;
-        specialization: string;
-        start: string;
-        end: string;
+    findAllAvailabilities(): any[];
+    findAvailabilityByDoctor(id: string): any[];
+    createAvailability(availability: CreateDoctorAvailabilityDto): {
+        doctor_id: number;
+        available_date: string;
+        start_time: string;
+        end_time: string;
         status: string;
+        availability_id: number;
+    };
+    deleteAvailability(id: string): {
+        deleted: boolean;
     };
 }

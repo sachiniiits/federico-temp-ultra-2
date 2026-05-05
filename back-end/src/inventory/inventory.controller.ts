@@ -1,59 +1,62 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Logger } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { ApiTags, ApiOperation, ApiHeader } from '@nestjs/swagger';
 import { Roles } from '../auth/roles.decorator';
+import { CreateInventoryItemDto, CreatePurchaseRequestDto, UpdateInventoryItemDto, UpdatePurchaseRequestDto } from './dto/inventory.dto';
 
 @ApiTags('Inventory')
-@ApiHeader({ name: 'x-role', description: 'User role (SUPER_USER required for write operations)' })
+@ApiHeader({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER)' })
 @Controller('inventory')
 export class InventoryController {
   private readonly logger = new Logger('📦 Inventory');
 
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @Get()
+  // INVENTORY_ITEM
+  @Get('items')
   @ApiOperation({ summary: 'Get all inventory items' })
-  @Roles('ADMIN', 'SUPER_USER', 'OPERATIONS')
-  findAll() {
-    const items = this.inventoryService.findAll();
-    this.logger.log(`📋 LIST ALL  total=${items.length} items`);
-    return items;
+  @Roles('ADMIN', 'SUPER_USER')
+  findAllItems() {
+    return this.inventoryService.findAllItems();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get an inventory item by ID' })
-  @Roles('ADMIN', 'SUPER_USER', 'OPERATIONS')
-  findOne(@Param('id') id: string) {
-    this.logger.log(`🔍 GET  item_id=${id}`);
-    return this.inventoryService.findOne(+id);
-  }
-
-  @Post()
+  @Post('items')
   @ApiOperation({ summary: 'Add a new inventory item' })
-  @Roles('SUPER_USER')
-  create(@Body() item: any) {
-    const result = this.inventoryService.create(item);
-    this.logger.log(
-      `✅ CREATED  item_id=${result.item_id}  name="${result.name}"  category=${result.category}  stock=${result.stock}  unitCost=₹${result.unitCost}`
-    );
+  @Roles('ADMIN', 'SUPER_USER')
+  createItem(@Body() item: CreateInventoryItemDto) {
+    const result = this.inventoryService.createItem(item);
+    this.logger.log(`✅ ITEM CREATED  id=${result.item_id}  name="${result.item_name}"`);
     return result;
   }
 
-  @Put(':id')
+  @Put('items/:id')
   @ApiOperation({ summary: 'Update inventory item' })
-  @Roles('SUPER_USER')
-  update(@Param('id') id: string, @Body() item: any) {
-    const result = this.inventoryService.update(+id, item);
-    const keys = Object.keys(item).join(', ');
-    this.logger.log(`✏️  UPDATED  item_id=${id}  fields=[${keys}]  stock=${item.stock ?? '?'}`);
+  @Roles('ADMIN', 'SUPER_USER')
+  updateItem(@Param('id') id: string, @Body() update: UpdateInventoryItemDto) {
+    return this.inventoryService.updateItem(+id, update);
+  }
+
+  // PURCHASE_REQUEST
+  @Get('requests')
+  @ApiOperation({ summary: 'Get all purchase requests' })
+  @Roles('ADMIN', 'SUPER_USER')
+  findAllRequests() {
+    return this.inventoryService.findAllRequests();
+  }
+
+  @Post('requests')
+  @ApiOperation({ summary: 'Create a purchase request' })
+  @Roles('ADMIN', 'SUPER_USER')
+  createRequest(@Body() request: CreatePurchaseRequestDto) {
+    const result = this.inventoryService.createRequest(request);
+    this.logger.log(`✅ REQUEST CREATED  id=${result.request_id}  item_id=${result.item_id}`);
     return result;
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete inventory item' })
-  @Roles('SUPER_USER')
-  remove(@Param('id') id: string) {
-    this.logger.log(`🗑️  DELETED  item_id=${id}`);
-    return this.inventoryService.remove(+id);
+  @Put('requests/:id')
+  @ApiOperation({ summary: 'Update purchase request status' })
+  @Roles('ADMIN', 'SUPER_USER')
+  updateRequest(@Param('id') id: string, @Body() update: UpdatePurchaseRequestDto) {
+    return this.inventoryService.updateRequest(+id, update);
   }
 }

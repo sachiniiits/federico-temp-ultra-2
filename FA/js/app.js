@@ -518,7 +518,6 @@ function renderReceipts() {
                 
                 <select id="receipt-filter" style="padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; font-family: inherit; background: white;" onchange="filterReceipts()">
                     <option value="ALL">All Payment Methods</option>
-                    <option value="CASH">Cash</option>
                     <option value="UPI">UPI</option>
                     <option value="CREDIT CARD">Credit Card</option>
                 </select>
@@ -788,7 +787,6 @@ function renderDischarge() {
                 <h3 style="margin: 0 0 20px 0; font-size: 18px; color: #1e293b;">Payment</h3>
                 
                 <select id="discharge-payment-method" onchange="handlePaymentMethodChange()" style="width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; margin-bottom: 16px; outline: none; background: white; color: #1e293b; font-family: inherit;">
-                    <option value="CASH">Cash</option>
                     <option value="UPI">UPI</option>
                     <option value="DEBIT CARD">Debit Card</option>
                     <option value="CREDIT CARD">Credit Card</option>

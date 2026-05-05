@@ -1,36 +1,51 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataService } from '../data/data.service';
+import { CreateInventoryItemDto, CreatePurchaseRequestDto } from './dto/inventory.dto';
 
 @Injectable()
 export class InventoryService {
   constructor(private dataService: DataService) {}
 
-  findAll() {
+  // INVENTORY_ITEM
+  findAllItems() {
     return this.dataService.inventoryItems;
   }
 
-  findOne(id: number) {
-    const item = this.dataService.inventoryItems.find((i) => i.item_id === id);
-    if (!item) throw new NotFoundException(`Inventory item with ID ${id} not found`);
+  createItem(item: CreateInventoryItemDto) {
+    const newItem = {
+      item_id: this.dataService.inventoryItems.length > 0 ? Math.max(...this.dataService.inventoryItems.map(i => i.item_id)) + 1 : 10,
+      ...item
+    };
+    this.dataService.inventoryItems.push(newItem);
+    return newItem;
+  }
+
+  updateItem(item_id: number, update: Partial<CreateInventoryItemDto>) {
+    const item = this.dataService.inventoryItems.find(i => i.item_id === item_id);
+    if (!item) return null;
+    Object.assign(item, update);
     return item;
   }
 
-  create(item: any) {
-    this.dataService.inventoryItems.push(item);
-    return item;
+  // PURCHASE_REQUEST
+  findAllRequests() {
+    return this.dataService.purchaseRequests;
   }
 
-  update(id: number, updateItem: any) {
-    const index = this.dataService.inventoryItems.findIndex((i) => i.item_id === id);
-    if (index === -1) throw new NotFoundException(`Inventory item with ID ${id} not found`);
-    this.dataService.inventoryItems[index] = { ...this.dataService.inventoryItems[index], ...updateItem };
-    return this.dataService.inventoryItems[index];
+  createRequest(request: CreatePurchaseRequestDto) {
+    const newReq = {
+      request_id: this.dataService.purchaseRequests.length > 0 ? Math.max(...this.dataService.purchaseRequests.map(r => r.request_id)) + 1 : 1,
+      requested_at: new Date().toISOString(),
+      ...request
+    };
+    this.dataService.purchaseRequests.push(newReq);
+    return newReq;
   }
 
-  remove(id: number) {
-    const index = this.dataService.inventoryItems.findIndex((i) => i.item_id === id);
-    if (index === -1) throw new NotFoundException(`Inventory item with ID ${id} not found`);
-    const removed = this.dataService.inventoryItems.splice(index, 1);
-    return removed[0];
+  updateRequest(request_id: number, update: Partial<CreatePurchaseRequestDto>) {
+    const req = this.dataService.purchaseRequests.find(r => r.request_id === request_id);
+    if (!req) return null;
+    Object.assign(req, update);
+    return req;
   }
 }

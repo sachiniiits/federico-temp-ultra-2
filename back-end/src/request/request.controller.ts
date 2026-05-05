@@ -2,43 +2,43 @@ import { Controller, Get, Post, Body, Put, Param, Logger } from '@nestjs/common'
 import { RequestService } from './request.service';
 import { ApiTags, ApiOperation, ApiHeader } from '@nestjs/swagger';
 import { Roles } from '../auth/roles.decorator';
-import { CreatePreRequestDto } from './dto/create-pre-request.dto';
+import { CreateAppointmentDto, UpdateAppointmentDto } from './dto/create-appointment.dto';
 
-@ApiTags('Requests')
-@ApiHeader({ name: 'x-role', description: 'User role' })
-@Controller('request')
+@ApiTags('Appointments')
+@ApiHeader({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER)' })
+@Controller('appointment')
 export class RequestController {
-  private readonly logger = new Logger('📋 PRE Requests');
+  private readonly logger = new Logger('📋 Appointments');
 
   constructor(private readonly requestService: RequestService) {}
 
-  @Get('pre')
-  @ApiOperation({ summary: 'Get all PRE requests' })
-  @Roles('ADMIN', 'SUPER_USER', 'OPERATIONS')
+  @Get()
+  @ApiOperation({ summary: 'Get all appointments' })
+  @Roles('ADMIN', 'SUPER_USER')
   findAll() {
-    const requests = this.requestService.findAllPreRequests();
-    this.logger.log(`📋 LIST ALL  total=${requests.length} PRE requests`);
-    return requests;
+    const apts = this.requestService.findAll();
+    this.logger.log(`📋 LIST ALL  total=${apts.length} appointments`);
+    return apts;
   }
 
-  @Post('pre')
-  @ApiOperation({ summary: 'Create a new PRE request' })
-  @Roles('OPERATIONS', 'SUPER_USER')
-  create(@Body() request: CreatePreRequestDto) {
-    const result = this.requestService.createPreRequest(request);
+  @Post()
+  @ApiOperation({ summary: 'Create a new appointment' })
+  @Roles('ADMIN', 'SUPER_USER')
+  create(@Body() appointment: CreateAppointmentDto) {
+    const result = this.requestService.create(appointment);
     this.logger.log(
-      `✅ CREATED  id=${result.id}  patient="${request.name}"  uhid=${request.patientId}  dept=${request.department}  type=${result.visitType || 'Consultation'}  status=${result.status}`
+      `✅ CREATED APPOINTMENT  id=${result.appointment_id}  patient_id=${result.patient_id}  type=${result.visit_type}  status=${result.status}`
     );
     return result;
   }
 
-  @Put('pre/:id')
-  @ApiOperation({ summary: 'Update a PRE request' })
-  @Roles('SUPER_USER', 'OPERATIONS')
-  update(@Param('id') id: string, @Body() update: any) {
-    const result = this.requestService.updatePreRequest(id, update);
+  @Put(':id')
+  @ApiOperation({ summary: 'Update an appointment status' })
+  @Roles('ADMIN', 'SUPER_USER')
+  update(@Param('id') id: string, @Body() update: UpdateAppointmentDto) {
+    const result = this.requestService.update(+id, update);
     const keys = Object.keys(update).join(', ');
-    this.logger.log(`✏️  UPDATED  request_id=${id}  status=${update.status || '?'}  homStatus=${update.homStatus || '?'}  fields=[${keys}]`);
+    this.logger.log(`✏️  UPDATED APPOINTMENT  id=${id}  status=${update.status || '?'}  fields=[${keys}]`);
     return result;
   }
 }

@@ -1,47 +1,40 @@
 import { DataService } from '../data/data.service';
-import { CreatePatientDto } from './dto/create-patient.dto';
+import { CreatePatientDto, CreatePatientInsuranceDto } from './dto/create-patient.dto';
 export declare class PatientService {
     private dataService;
     constructor(dataService: DataService);
-    findAll(): {
-        id: string;
+    findAll(): any[];
+    findOne(id: string): any;
+    create(patient: CreatePatientDto): {
+        user_id: number;
+        uhid: string;
         name: string;
-        age: string;
-        gender: string;
         phone: string;
-        address: string;
-    }[];
-    findOne(id: string): {
-        id: string;
-        name: string;
-        age: string;
+        alternate_phone?: string;
+        dob: string;
         gender: string;
-        phone: string;
-        address: string;
+        blood_group?: string;
+        address?: string;
+        emergency_contact_name?: string;
+        emergency_contact_phone?: string;
+        patient_id: number;
+        created_at: string;
     };
-    create(createPatientDto: CreatePatientDto): {
-        id: string;
-        name: string;
-        age: string;
-        gender: string;
-        phone: string;
-        address: string;
-        email?: string;
-    };
-    update(id: string, updatePatient: any): {
-        id: string;
-        name: string;
-        age: string;
-        gender: string;
-        phone: string;
-        address: string;
-    };
+    update(id: string, update: Partial<CreatePatientDto>): any;
     remove(id: string): {
-        id: string;
-        name: string;
-        age: string;
-        gender: string;
-        phone: string;
-        address: string;
+        deleted: boolean;
+    };
+    findAllInsurances(): any[];
+    findInsuranceByPatient(patient_id: number): any[];
+    createInsurance(insurance: CreatePatientInsuranceDto): {
+        patient_id: number;
+        provider_name: string;
+        policy_number: string;
+        member_id: string;
+        coverage_type: string;
+        valid_from: string;
+        valid_to: string;
+        insurance_id: number;
+        created_at: string;
     };
 }

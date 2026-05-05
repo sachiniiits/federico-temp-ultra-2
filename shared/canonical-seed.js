@@ -134,7 +134,7 @@
       doctors: [
         { id: "D101", name: "Dr Qasim", specialization: "Cardiology", start: "9:00 AM", end: "1:00 PM", status: "Available" },
         { id: "D102", name: "Dr Kammran", specialization: "Orthopedics", start: "2:00 PM", end: "7:00 PM", status: "Available" },
-        { id: "D103", name: "Dr Hamiz", specialization: "Neurology", start: "11:00 AM", end: "4:00 PM", status: "Not Available" },
+        { id: "D103", name: "Dr Hamiz", specialization: "Neurology", start: "11:00 AM", end: "4:00 PM", status: "Available" },
         { id: "D104", name: "Dr Sachin", specialization: "Dermatology", start: "10:00 AM", end: "3:00 PM", status: "Available" }
       ],
       wards: [

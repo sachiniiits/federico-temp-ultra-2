@@ -17,62 +17,62 @@ const common_1 = require("@nestjs/common");
 const request_service_1 = require("./request.service");
 const swagger_1 = require("@nestjs/swagger");
 const roles_decorator_1 = require("../auth/roles.decorator");
-const create_pre_request_dto_1 = require("./dto/create-pre-request.dto");
+const create_appointment_dto_1 = require("./dto/create-appointment.dto");
 let RequestController = class RequestController {
     requestService;
-    logger = new common_1.Logger('📋 PRE Requests');
+    logger = new common_1.Logger('📋 Appointments');
     constructor(requestService) {
         this.requestService = requestService;
     }
     findAll() {
-        const requests = this.requestService.findAllPreRequests();
-        this.logger.log(`📋 LIST ALL  total=${requests.length} PRE requests`);
-        return requests;
+        const apts = this.requestService.findAll();
+        this.logger.log(`📋 LIST ALL  total=${apts.length} appointments`);
+        return apts;
     }
-    create(request) {
-        const result = this.requestService.createPreRequest(request);
-        this.logger.log(`✅ CREATED  id=${result.id}  patient="${request.name}"  uhid=${request.patientId}  dept=${request.department}  type=${result.visitType || 'Consultation'}  status=${result.status}`);
+    create(appointment) {
+        const result = this.requestService.create(appointment);
+        this.logger.log(`✅ CREATED APPOINTMENT  id=${result.appointment_id}  patient_id=${result.patient_id}  type=${result.visit_type}  status=${result.status}`);
         return result;
     }
     update(id, update) {
-        const result = this.requestService.updatePreRequest(id, update);
+        const result = this.requestService.update(+id, update);
         const keys = Object.keys(update).join(', ');
-        this.logger.log(`✏️  UPDATED  request_id=${id}  status=${update.status || '?'}  homStatus=${update.homStatus || '?'}  fields=[${keys}]`);
+        this.logger.log(`✏️  UPDATED APPOINTMENT  id=${id}  status=${update.status || '?'}  fields=[${keys}]`);
         return result;
     }
 };
 exports.RequestController = RequestController;
 __decorate([
-    (0, common_1.Get)('pre'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get all PRE requests' }),
-    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER', 'OPERATIONS'),
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all appointments' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], RequestController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Post)('pre'),
-    (0, swagger_1.ApiOperation)({ summary: 'Create a new PRE request' }),
-    (0, roles_decorator_1.Roles)('OPERATIONS', 'SUPER_USER'),
+    (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new appointment' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_pre_request_dto_1.CreatePreRequestDto]),
+    __metadata("design:paramtypes", [create_appointment_dto_1.CreateAppointmentDto]),
     __metadata("design:returntype", void 0)
 ], RequestController.prototype, "create", null);
 __decorate([
-    (0, common_1.Put)('pre/:id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Update a PRE request' }),
-    (0, roles_decorator_1.Roles)('SUPER_USER', 'OPERATIONS'),
+    (0, common_1.Put)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Update an appointment status' }),
+    (0, roles_decorator_1.Roles)('ADMIN', 'SUPER_USER'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, create_appointment_dto_1.UpdateAppointmentDto]),
     __metadata("design:returntype", void 0)
 ], RequestController.prototype, "update", null);
 exports.RequestController = RequestController = __decorate([
-    (0, swagger_1.ApiTags)('Requests'),
-    (0, swagger_1.ApiHeader)({ name: 'x-role', description: 'User role' }),
-    (0, common_1.Controller)('request'),
+    (0, swagger_1.ApiTags)('Appointments'),
+    (0, swagger_1.ApiHeader)({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER)' }),
+    (0, common_1.Controller)('appointment'),
     __metadata("design:paramtypes", [request_service_1.RequestService])
 ], RequestController);
 //# sourceMappingURL=request.controller.js.map

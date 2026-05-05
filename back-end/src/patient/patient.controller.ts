@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Logger } from '@nestjs/common';
 import { PatientService } from './patient.service';
-import { CreatePatientDto } from './dto/create-patient.dto';
+import { CreatePatientDto, CreatePatientInsuranceDto, UpdatePatientDto } from './dto/create-patient.dto';
 import { ApiTags, ApiOperation, ApiHeader, ApiResponse } from '@nestjs/swagger';
 import { Roles } from '../auth/roles.decorator';
 
 @ApiTags('Patients')
-@ApiHeader({ name: 'x-role', description: 'User role (OPERATIONS or SUPER_USER required for write operations)' })
+@ApiHeader({ name: 'x-role', description: 'User role (ADMIN or SUPER_USER)' })
 @Controller('patient')
 export class PatientController {
   private readonly logger = new Logger('🧑‍🤝‍🧑 Patients');
@@ -14,48 +14,63 @@ export class PatientController {
 
   @Get()
   @ApiOperation({ summary: 'Get all patients' })
-  @Roles('ADMIN', 'SUPER_USER', 'OPERATIONS')
+  @Roles('ADMIN', 'SUPER_USER')
   findAll() {
-    const patients = this.patientService.findAll();
-    this.logger.log(`📋 LIST ALL  total=${patients.length} patients`);
-    return patients;
+    return this.patientService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get a patient by ID' })
-  @Roles('ADMIN', 'SUPER_USER', 'OPERATIONS', 'PATIENT')
+  @ApiOperation({ summary: 'Get a patient by ID or UHID' })
+  @Roles('ADMIN', 'SUPER_USER')
   findOne(@Param('id') id: string) {
-    this.logger.log(`🔍 GET  uhid=${id}`);
     return this.patientService.findOne(id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Register a new patient' })
   @ApiResponse({ status: 201, description: 'Patient successfully created' })
-  @Roles('OPERATIONS', 'SUPER_USER')
+  @Roles('ADMIN', 'SUPER_USER')
   create(@Body() createPatientDto: CreatePatientDto) {
     const result = this.patientService.create(createPatientDto);
-    this.logger.log(
-      `✅ REGISTERED  uhid=${result.id}  name="${result.name}"  age=${result.age}  gender=${result.gender}  phone=${result.phone}`
-    );
+    this.logger.log(`✅ REGISTERED  patient_id=${result.patient_id}  name="${result.name}"`);
     return result;
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update patient information' })
-  @Roles('OPERATIONS', 'SUPER_USER')
-  update(@Param('id') id: string, @Body() updatePatient: any) {
-    const result = this.patientService.update(id, updatePatient);
-    const keys = Object.keys(updatePatient).join(', ');
-    this.logger.log(`✏️  UPDATED  uhid=${id}  fields=[${keys}]`);
-    return result;
+  @Roles('ADMIN', 'SUPER_USER')
+  update(@Param('id') id: string, @Body() updatePatient: UpdatePatientDto) {
+    return this.patientService.update(id, updatePatient);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a patient' })
-  @Roles('SUPER_USER')
+  @Roles('ADMIN', 'SUPER_USER')
   remove(@Param('id') id: string) {
-    this.logger.log(`🗑️  DELETED  uhid=${id}`);
     return this.patientService.remove(id);
+  }
+
+  // Insurance Endpoints
+  @Get('insurance/all')
+  @ApiOperation({ summary: 'Get all patient insurances' })
+  @Roles('ADMIN', 'SUPER_USER')
+  findAllInsurances() {
+    return this.patientService.findAllInsurances();
+  }
+
+  @Get(':id/insurance')
+  @ApiOperation({ summary: 'Get insurances by patient ID' })
+  @Roles('ADMIN', 'SUPER_USER')
+  findInsuranceByPatient(@Param('id') id: string) {
+    return this.patientService.findInsuranceByPatient(+id);
+  }
+
+  @Post('insurance')
+  @ApiOperation({ summary: 'Add insurance for a patient' })
+  @Roles('ADMIN', 'SUPER_USER')
+  createInsurance(@Body() insurance: CreatePatientInsuranceDto) {
+    const result = this.patientService.createInsurance(insurance);
+    this.logger.log(`✅ INSURANCE ADDED  insurance_id=${result.insurance_id}  patient_id=${result.patient_id}`);
+    return result;
   }
 }

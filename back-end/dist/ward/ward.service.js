@@ -17,24 +17,36 @@ let WardService = class WardService {
     constructor(dataService) {
         this.dataService = dataService;
     }
-    findAll() {
+    findAllWards() {
         return this.dataService.wards;
     }
-    findBeds(wardName) {
-        const ward = this.dataService.wards.find((w) => w.name === wardName);
-        if (!ward)
-            throw new common_1.NotFoundException(`Ward ${wardName} not found`);
-        return ward.beds;
+    createWard(ward) {
+        const newWard = {
+            ward_id: this.dataService.wards.length > 0 ? Math.max(...this.dataService.wards.map(w => w.ward_id)) + 1 : 1,
+            ...ward
+        };
+        this.dataService.wards.push(newWard);
+        return newWard;
     }
-    updateBedStatus(wardName, bedNumber, status, patient) {
-        const ward = this.dataService.wards.find((w) => w.name === wardName);
-        if (!ward)
-            throw new common_1.NotFoundException(`Ward ${wardName} not found`);
-        const bed = ward.beds.find((b) => b.number === bedNumber);
+    findAllBeds() {
+        return this.dataService.beds;
+    }
+    findBedsByWard(ward_id) {
+        return this.dataService.beds.filter(b => b.ward_id === ward_id);
+    }
+    createBed(bed) {
+        const newBed = {
+            bed_id: this.dataService.beds.length > 0 ? Math.max(...this.dataService.beds.map(b => b.bed_id)) + 1 : 11,
+            ...bed
+        };
+        this.dataService.beds.push(newBed);
+        return newBed;
+    }
+    updateBedStatus(bed_id, status) {
+        const bed = this.dataService.beds.find(b => b.bed_id === bed_id);
         if (!bed)
-            throw new common_1.NotFoundException(`Bed ${bedNumber} not found in ward ${wardName}`);
+            return null;
         bed.status = status;
-        bed.patient = patient;
         return bed;
     }
 };

@@ -5,16 +5,14 @@ export declare class AdmissionService {
     constructor(dataService: DataService);
     findAll(): any[];
     findOne(id: number): any;
-    create(createAdmissionDto: CreateAdmissionDto): {
+    create(admission: CreateAdmissionDto): {
+        appointment_id: number;
+        patient_id: number;
+        bed_id: number;
+        admit_time: string;
+        discharge_time?: string;
+        status: string;
         admission_id: number;
-        ledger_id: number;
-        discharged: boolean;
-        patient_name: string;
-        uhid: string;
-        ward_no: string;
-        doctor_assigned: string;
-        coverage: number;
-        insurance_provider: string;
     };
-    update(id: number, update: any): any;
+    update(id: number, update: Partial<CreateAdmissionDto>): any;
 }

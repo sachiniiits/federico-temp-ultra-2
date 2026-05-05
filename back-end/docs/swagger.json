@@ -24,7 +24,7 @@
             "description": ""
           }
         },
-        "summary": "Get the full in-memory state",
+        "summary": "Get the full in-memory state representing the DB schema",
         "tags": [
           "Data Sync"
         ]
@@ -45,12 +45,12 @@
     },
     "/doctor": {
       "get": {
-        "operationId": "DoctorController_findAll",
+        "operationId": "DoctorController_findAllDoctors",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (ADMIN or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -67,12 +67,12 @@
         ]
       },
       "post": {
-        "operationId": "DoctorController_create",
+        "operationId": "DoctorController_createDoctor",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (ADMIN or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -101,12 +101,12 @@
     },
     "/doctor/{id}": {
       "get": {
-        "operationId": "DoctorController_findOne",
+        "operationId": "DoctorController_findDoctor",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (ADMIN or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -131,12 +131,12 @@
         ]
       },
       "put": {
-        "operationId": "DoctorController_update",
+        "operationId": "DoctorController_updateDoctor",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (ADMIN or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -155,7 +155,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateDoctorDto"
+                "$ref": "#/components/schemas/UpdateDoctorDto"
               }
             }
           }
@@ -171,12 +171,12 @@
         ]
       },
       "delete": {
-        "operationId": "DoctorController_remove",
+        "operationId": "DoctorController_deleteDoctor",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (ADMIN or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -201,6 +201,128 @@
         ]
       }
     },
+    "/doctor/availability/all": {
+      "get": {
+        "operationId": "DoctorController_findAllAvailabilities",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all doctor availabilities",
+        "tags": [
+          "Doctors"
+        ]
+      }
+    },
+    "/doctor/{id}/availability": {
+      "get": {
+        "operationId": "DoctorController_findAvailabilityByDoctor",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get availability by doctor ID",
+        "tags": [
+          "Doctors"
+        ]
+      }
+    },
+    "/doctor/availability": {
+      "post": {
+        "operationId": "DoctorController_createAvailability",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorAvailabilityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new doctor availability",
+        "tags": [
+          "Doctors"
+        ]
+      }
+    },
+    "/doctor/availability/{id}": {
+      "delete": {
+        "operationId": "DoctorController_deleteAvailability",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Delete a doctor availability",
+        "tags": [
+          "Doctors"
+        ]
+      }
+    },
     "/patient": {
       "get": {
         "operationId": "PatientController_findAll",
@@ -208,7 +330,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (OPERATIONS or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -230,7 +352,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (OPERATIONS or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -264,7 +386,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (OPERATIONS or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -283,7 +405,7 @@
             "description": ""
           }
         },
-        "summary": "Get a patient by ID",
+        "summary": "Get a patient by ID or UHID",
         "tags": [
           "Patients"
         ]
@@ -294,7 +416,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (OPERATIONS or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -308,6 +430,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePatientDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -324,7 +456,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (OPERATIONS or SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -349,14 +481,104 @@
         ]
       }
     },
-    "/ward": {
+    "/patient/insurance/all": {
       "get": {
-        "operationId": "WardController_findAll",
+        "operationId": "PatientController_findAllInsurances",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all patient insurances",
+        "tags": [
+          "Patients"
+        ]
+      }
+    },
+    "/patient/{id}/insurance": {
+      "get": {
+        "operationId": "PatientController_findInsuranceByPatient",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get insurances by patient ID",
+        "tags": [
+          "Patients"
+        ]
+      }
+    },
+    "/patient/insurance": {
+      "post": {
+        "operationId": "PatientController_createInsurance",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePatientInsuranceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Add insurance for a patient",
+        "tags": [
+          "Patients"
+        ]
+      }
+    },
+    "/ward": {
+      "get": {
+        "operationId": "WardController_findAllWards",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -371,22 +593,78 @@
         "tags": [
           "Wards"
         ]
-      }
-    },
-    "/ward/{name}/beds": {
-      "get": {
-        "operationId": "WardController_findBeds",
+      },
+      "post": {
+        "operationId": "WardController_createWard",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new ward",
+        "tags": [
+          "Wards"
+        ]
+      }
+    },
+    "/ward/beds": {
+      "get": {
+        "operationId": "WardController_findAllBeds",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all beds across all wards",
+        "tags": [
+          "Wards"
+        ]
+      }
+    },
+    "/ward/{id}/beds": {
+      "get": {
+        "operationId": "WardController_findBedsByWard",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "name",
+            "name": "id",
             "required": true,
             "in": "path",
             "schema": {
@@ -399,34 +677,60 @@
             "description": ""
           }
         },
-        "summary": "Get beds in a ward",
+        "summary": "Get beds in a specific ward",
         "tags": [
           "Wards"
         ]
       }
     },
-    "/ward/{name}/bed/{bedNumber}": {
-      "put": {
-        "operationId": "WardController_updateBed",
+    "/ward/bed": {
+      "post": {
+        "operationId": "WardController_createBed",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBedDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new bed",
+        "tags": [
+          "Wards"
+        ]
+      }
+    },
+    "/ward/bed/{bedId}": {
+      "put": {
+        "operationId": "WardController_updateBedStatus",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "name",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "bedNumber",
+            "name": "bedId",
             "required": true,
             "in": "path",
             "schema": {
@@ -434,6 +738,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBedStatusDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -445,14 +759,14 @@
         ]
       }
     },
-    "/inventory": {
+    "/inventory/items": {
       "get": {
-        "operationId": "InventoryController_findAll",
+        "operationId": "InventoryController_findAllItems",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -469,17 +783,27 @@
         ]
       },
       "post": {
-        "operationId": "InventoryController_create",
+        "operationId": "InventoryController_createItem",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInventoryItemDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -491,14 +815,14 @@
         ]
       }
     },
-    "/inventory/{id}": {
-      "get": {
-        "operationId": "InventoryController_findOne",
+    "/inventory/items/{id}": {
+      "put": {
+        "operationId": "InventoryController_updateItem",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -512,36 +836,16 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": ""
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInventoryItemDto"
+              }
+            }
           }
         },
-        "summary": "Get an inventory item by ID",
-        "tags": [
-          "Inventory"
-        ]
-      },
-      "put": {
-        "operationId": "InventoryController_update",
-        "parameters": [
-          {
-            "name": "x-role",
-            "in": "header",
-            "description": "User role (SUPER_USER required for write operations)",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": ""
@@ -551,14 +855,72 @@
         "tags": [
           "Inventory"
         ]
-      },
-      "delete": {
-        "operationId": "InventoryController_remove",
+      }
+    },
+    "/inventory/requests": {
+      "get": {
+        "operationId": "InventoryController_findAllRequests",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role (SUPER_USER required for write operations)",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all purchase requests",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "post": {
+        "operationId": "InventoryController_createRequest",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurchaseRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a purchase request",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/inventory/requests/{id}": {
+      "put": {
+        "operationId": "InventoryController_updateRequest",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -572,25 +934,91 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurchaseRequestDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "summary": "Delete inventory item",
+        "summary": "Update purchase request status",
         "tags": [
           "Inventory"
         ]
       }
     },
-    "/billing/ledger/{admissionId}": {
+    "/billing/services": {
       "get": {
-        "operationId": "BillingController_findLedger",
+        "operationId": "BillingController_findAllServices",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all billable services",
+        "tags": [
+          "Billing"
+        ]
+      },
+      "post": {
+        "operationId": "BillingController_createService",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new billable service",
+        "tags": [
+          "Billing"
+        ]
+      }
+    },
+    "/billing/ledger/{admissionId}": {
+      "get": {
+        "operationId": "BillingController_findLedgerByAdmission",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -609,26 +1037,86 @@
             "description": ""
           }
         },
-        "summary": "Get ledger entries for an admission",
+        "summary": "Get ledger for an admission",
         "tags": [
           "Billing"
         ]
-      },
+      }
+    },
+    "/billing/ledger": {
       "post": {
-        "operationId": "BillingController_addEntry",
+        "operationId": "BillingController_createLedger",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLedgerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a ledger for an admission",
+        "tags": [
+          "Billing"
+        ]
+      }
+    },
+    "/billing/ledger/{ledgerId}/entries": {
+      "get": {
+        "operationId": "BillingController_findLedgerEntries",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "admissionId",
+            "name": "ledgerId",
             "required": true,
             "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all entries for a ledger",
+        "tags": [
+          "Billing"
+        ]
+      }
+    },
+    "/billing/ledger/entry": {
+      "post": {
+        "operationId": "BillingController_addLedgerEntry",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -655,46 +1143,14 @@
         ]
       }
     },
-    "/billing/receipts": {
-      "post": {
-        "operationId": "BillingController_createReceipt",
-        "parameters": [
-          {
-            "name": "x-role",
-            "in": "header",
-            "description": "User role",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateReceiptDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "summary": "Create a new receipt",
-        "tags": [
-          "Billing"
-        ]
-      },
+    "/billing/payments": {
       "get": {
-        "operationId": "BillingController_findAllReceipts",
+        "operationId": "BillingController_findAllPayments",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -705,28 +1161,18 @@
             "description": ""
           }
         },
-        "summary": "Get all receipts",
+        "summary": "Get all payments",
         "tags": [
           "Billing"
         ]
-      }
-    },
-    "/billing/discharge-summary/{admissionId}": {
+      },
       "post": {
-        "operationId": "BillingController_createSummary",
+        "operationId": "BillingController_createPayment",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "admissionId",
-            "required": true,
-            "in": "path",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -737,7 +1183,41 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DischargeSummaryDto"
+                "$ref": "#/components/schemas/CreatePaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new payment",
+        "tags": [
+          "Billing"
+        ]
+      }
+    },
+    "/billing/discharge-summary": {
+      "post": {
+        "operationId": "BillingController_createSummary",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "User role (ADMIN or SUPER_USER)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDischargeSummaryDto"
               }
             }
           }
@@ -753,14 +1233,14 @@
         ]
       }
     },
-    "/request/pre": {
+    "/appointment": {
       "get": {
         "operationId": "RequestController_findAll",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -771,9 +1251,9 @@
             "description": ""
           }
         },
-        "summary": "Get all PRE requests",
+        "summary": "Get all appointments",
         "tags": [
-          "Requests"
+          "Appointments"
         ]
       },
       "post": {
@@ -782,7 +1262,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -793,7 +1273,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePreRequestDto"
+                "$ref": "#/components/schemas/CreateAppointmentDto"
               }
             }
           }
@@ -803,20 +1283,20 @@
             "description": ""
           }
         },
-        "summary": "Create a new PRE request",
+        "summary": "Create a new appointment",
         "tags": [
-          "Requests"
+          "Appointments"
         ]
       }
     },
-    "/request/pre/{id}": {
+    "/appointment/{id}": {
       "put": {
         "operationId": "RequestController_update",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -830,14 +1310,24 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAppointmentDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "summary": "Update a PRE request",
+        "summary": "Update an appointment status",
         "tags": [
-          "Requests"
+          "Appointments"
         ]
       }
     },
@@ -848,7 +1338,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -870,7 +1360,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -891,7 +1381,7 @@
             "description": ""
           }
         },
-        "summary": "Create a new admission (HOM)",
+        "summary": "Create a new admission",
         "tags": [
           "Admissions"
         ]
@@ -904,7 +1394,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -934,7 +1424,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "User role",
+            "description": "User role (ADMIN or SUPER_USER)",
             "schema": {
               "type": "string"
             }
@@ -948,6 +1438,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdmissionDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -982,317 +1482,727 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "Dr. Smith",
-            "description": "Full name of the doctor"
+            "description": "The name of the doctor",
+            "example": "Dr. Arjun Mehta"
           },
           "specialization": {
             "type": "string",
-            "example": "Cardiology",
-            "description": "Doctor specialization"
+            "description": "The specialization of the doctor",
+            "example": "Cardiology"
           },
-          "start": {
+          "phone": {
             "type": "string",
-            "example": "9:00 AM",
-            "description": "Shift start time"
+            "description": "The phone number of the doctor",
+            "example": "8881112222"
           },
-          "end": {
+          "email": {
             "type": "string",
-            "example": "5:00 PM",
-            "description": "Shift end time"
-          },
-          "status": {
-            "type": "string",
-            "example": "Available",
-            "description": "Doctor availability status",
-            "enum": [
-              "Available",
-              "Not Available"
-            ],
-            "default": "Available"
+            "description": "The email address of the doctor",
+            "example": "arjun.m@hosp.com"
           }
         },
         "required": [
           "name",
           "specialization",
-          "start",
-          "end",
+          "phone",
+          "email"
+        ]
+      },
+      "UpdateDoctorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the doctor",
+            "example": "Dr. Arjun Mehta"
+          },
+          "specialization": {
+            "type": "string",
+            "description": "The specialization of the doctor",
+            "example": "Cardiology"
+          },
+          "phone": {
+            "type": "string",
+            "description": "The phone number of the doctor",
+            "example": "8881112222"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the doctor",
+            "example": "arjun.m@hosp.com"
+          }
+        }
+      },
+      "CreateDoctorAvailabilityDto": {
+        "type": "object",
+        "properties": {
+          "doctor_id": {
+            "type": "number",
+            "description": "The doctor ID",
+            "example": 401
+          },
+          "available_date": {
+            "type": "string",
+            "description": "The date of availability",
+            "example": "2026-03-15"
+          },
+          "start_time": {
+            "type": "string",
+            "description": "The start time of availability",
+            "example": "09:00:00"
+          },
+          "end_time": {
+            "type": "string",
+            "description": "The end time of availability",
+            "example": "12:00:00"
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of availability",
+            "example": "Available"
+          }
+        },
+        "required": [
+          "doctor_id",
+          "available_date",
+          "start_time",
+          "end_time",
           "status"
         ]
       },
       "CreatePatientDto": {
         "type": "object",
         "properties": {
-          "id": {
+          "user_id": {
+            "type": "number",
+            "description": "The user ID associated with this patient",
+            "example": 101
+          },
+          "uhid": {
             "type": "string",
-            "example": "FED-2026-9001"
+            "description": "Unique Hospital Identification Number",
+            "example": "UHID-882100"
           },
           "name": {
             "type": "string",
-            "example": "Arun Mehta"
-          },
-          "age": {
-            "type": "string",
-            "example": "54"
-          },
-          "gender": {
-            "type": "string",
-            "example": "Male"
+            "description": "The name of the patient",
+            "example": "Hamiz Shams"
           },
           "phone": {
             "type": "string",
-            "example": "9876543210"
+            "description": "The phone number of the patient",
+            "example": "+91-9876543210"
+          },
+          "alternate_phone": {
+            "type": "string",
+            "description": "The alternate phone number",
+            "example": "+91-9876543211"
+          },
+          "dob": {
+            "type": "string",
+            "description": "Date of birth",
+            "example": "1998-04-12"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender of the patient",
+            "example": "Male"
+          },
+          "blood_group": {
+            "type": "string",
+            "description": "Blood group",
+            "example": "O+"
           },
           "address": {
             "type": "string",
-            "example": "Banjara Hills"
+            "description": "Address",
+            "example": "12 MG Road, Hyderabad"
           },
-          "email": {
+          "emergency_contact_name": {
             "type": "string",
-            "example": "arun.mehta@example.com"
+            "description": "Emergency contact name",
+            "example": "Amina Begum"
+          },
+          "emergency_contact_phone": {
+            "type": "string",
+            "description": "Emergency contact phone",
+            "example": "+91-9000011111"
           }
         },
         "required": [
+          "user_id",
+          "uhid",
           "name",
-          "age",
-          "gender",
           "phone",
-          "address"
+          "dob",
+          "gender"
         ]
       },
-      "CreateLedgerEntryDto": {
+      "UpdatePatientDto": {
         "type": "object",
         "properties": {
-          "entry_id": {
+          "user_id": {
             "type": "number",
-            "example": 1
+            "description": "The user ID associated with this patient",
+            "example": 101
           },
-          "service_name": {
+          "uhid": {
             "type": "string",
-            "example": "Consultation"
+            "description": "Unique Hospital Identification Number",
+            "example": "UHID-882100"
           },
-          "qty": {
+          "name": {
+            "type": "string",
+            "description": "The name of the patient",
+            "example": "Hamiz Shams"
+          },
+          "phone": {
+            "type": "string",
+            "description": "The phone number of the patient",
+            "example": "+91-9876543210"
+          },
+          "alternate_phone": {
+            "type": "string",
+            "description": "The alternate phone number",
+            "example": "+91-9876543211"
+          },
+          "dob": {
+            "type": "string",
+            "description": "Date of birth",
+            "example": "1998-04-12"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender of the patient",
+            "example": "Male"
+          },
+          "blood_group": {
+            "type": "string",
+            "description": "Blood group",
+            "example": "O+"
+          },
+          "address": {
+            "type": "string",
+            "description": "Address",
+            "example": "12 MG Road, Hyderabad"
+          },
+          "emergency_contact_name": {
+            "type": "string",
+            "description": "Emergency contact name",
+            "example": "Amina Begum"
+          },
+          "emergency_contact_phone": {
+            "type": "string",
+            "description": "Emergency contact phone",
+            "example": "+91-9000011111"
+          }
+        }
+      },
+      "CreatePatientInsuranceDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
             "type": "number",
+            "description": "The patient ID",
+            "example": 201
+          },
+          "provider_name": {
+            "type": "string",
+            "description": "The insurance provider name",
+            "example": "Niva Bupa"
+          },
+          "policy_number": {
+            "type": "string",
+            "description": "The policy number",
+            "example": "NB-77210"
+          },
+          "member_id": {
+            "type": "string",
+            "description": "The member ID",
+            "example": "M-990"
+          },
+          "coverage_type": {
+            "type": "string",
+            "description": "Coverage type",
+            "example": "Full"
+          },
+          "valid_from": {
+            "type": "string",
+            "description": "Valid from date",
+            "example": "2025-01-01"
+          },
+          "valid_to": {
+            "type": "string",
+            "description": "Valid to date",
+            "example": "2027-12-31"
+          }
+        },
+        "required": [
+          "patient_id",
+          "provider_name",
+          "policy_number",
+          "member_id",
+          "coverage_type",
+          "valid_from",
+          "valid_to"
+        ]
+      },
+      "CreateWardDto": {
+        "type": "object",
+        "properties": {
+          "ward_name": {
+            "type": "string",
+            "description": "Name of the ward",
+            "example": "General Ward A"
+          },
+          "total_beds": {
+            "type": "number",
+            "description": "Total beds in the ward",
+            "example": 20
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the ward",
+            "example": "North Wing Floor 1"
+          }
+        },
+        "required": [
+          "ward_name",
+          "total_beds"
+        ]
+      },
+      "CreateBedDto": {
+        "type": "object",
+        "properties": {
+          "ward_id": {
+            "type": "number",
+            "description": "Ward ID this bed belongs to",
             "example": 1
           },
-          "price": {
+          "bed_number": {
+            "type": "string",
+            "description": "The bed number identifier",
+            "example": "G-101"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the bed",
+            "example": "AVAILABLE"
+          }
+        },
+        "required": [
+          "ward_id",
+          "bed_number",
+          "status"
+        ]
+      },
+      "UpdateBedStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The new status of the bed",
+            "example": "OCCUPIED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CreateInventoryItemDto": {
+        "type": "object",
+        "properties": {
+          "item_name": {
+            "type": "string",
+            "description": "Name of the item",
+            "example": "Syringe 5ml"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category",
+            "example": "Consumable"
+          },
+          "stock_quantity": {
             "type": "number",
+            "description": "Current stock quantity",
             "example": 500
           },
-          "tax": {
+          "reorder_level": {
             "type": "number",
-            "example": 0
+            "description": "Reorder level trigger",
+            "example": 100
           },
-          "ts": {
+          "service_id": {
             "type": "number",
-            "example": 1714853856123
+            "description": "Associated Service ID (if applicable)",
+            "example": 1
+          }
+        },
+        "required": [
+          "item_name",
+          "category",
+          "stock_quantity",
+          "reorder_level"
+        ]
+      },
+      "UpdateInventoryItemDto": {
+        "type": "object",
+        "properties": {
+          "item_name": {
+            "type": "string",
+            "description": "Name of the item",
+            "example": "Syringe 5ml"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category",
+            "example": "Consumable"
+          },
+          "stock_quantity": {
+            "type": "number",
+            "description": "Current stock quantity",
+            "example": 500
+          },
+          "reorder_level": {
+            "type": "number",
+            "description": "Reorder level trigger",
+            "example": 100
+          },
+          "service_id": {
+            "type": "number",
+            "description": "Associated Service ID (if applicable)",
+            "example": 1
+          }
+        }
+      },
+      "CreatePurchaseRequestDto": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "number",
+            "description": "Inventory item ID",
+            "example": 10
+          },
+          "quantity_requested": {
+            "type": "number",
+            "description": "Quantity requested",
+            "example": 500
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the request",
+            "example": "PENDING"
+          },
+          "requested_by": {
+            "type": "number",
+            "description": "User ID who requested",
+            "example": 101
+          }
+        },
+        "required": [
+          "item_id",
+          "quantity_requested",
+          "status",
+          "requested_by"
+        ]
+      },
+      "UpdatePurchaseRequestDto": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "number",
+            "description": "Inventory item ID",
+            "example": 10
+          },
+          "quantity_requested": {
+            "type": "number",
+            "description": "Quantity requested",
+            "example": 500
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the request",
+            "example": "PENDING"
+          },
+          "requested_by": {
+            "type": "number",
+            "description": "User ID who requested",
+            "example": 101
+          }
+        }
+      },
+      "CreateServiceDto": {
+        "type": "object",
+        "properties": {
+          "service_name": {
+            "type": "string",
+            "example": "Consultation Fee"
+          },
+          "base_cost": {
+            "type": "number",
+            "example": 500
           }
         },
         "required": [
           "service_name",
-          "qty",
-          "price",
-          "tax"
+          "base_cost"
         ]
       },
-      "CreateReceiptDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number",
-            "example": 901
-          },
-          "patient": {
-            "type": "string",
-            "example": "Rahul Verma"
-          },
-          "uhid": {
-            "type": "string",
-            "example": "FED-2026-TEST01"
-          },
-          "amount": {
-            "type": "number",
-            "example": 3100
-          },
-          "gross": {
-            "type": "number",
-            "example": 4600
-          },
-          "coverage": {
-            "type": "number",
-            "example": 1500
-          },
-          "insurance": {
-            "type": "string",
-            "example": "Star Health"
-          },
-          "mode": {
-            "type": "string",
-            "example": "UPI"
-          },
-          "status": {
-            "type": "string",
-            "example": "Paid"
-          },
-          "ts": {
-            "type": "number",
-            "example": 1714853856123
-          }
-        },
-        "required": [
-          "patient",
-          "uhid",
-          "amount",
-          "gross",
-          "coverage",
-          "insurance",
-          "mode",
-          "status"
-        ]
-      },
-      "DischargeSummaryDto": {
-        "type": "object",
-        "properties": {
-          "summary": {
-            "type": "string",
-            "example": "Patient recovered well after surgery."
-          },
-          "followUp": {
-            "type": "string",
-            "example": "Follow up in 2 weeks."
-          },
-          "advice": {
-            "type": "string",
-            "example": "Rest and prescribed medications."
-          }
-        },
-        "required": [
-          "summary",
-          "followUp",
-          "advice"
-        ]
-      },
-      "CreatePreRequestDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "PRE-TEST-2001"
-          },
-          "appointmentId": {
-            "type": "string",
-            "example": "PRE-APT-TEST-2001"
-          },
-          "patientId": {
-            "type": "string",
-            "example": "FED-2026-9001"
-          },
-          "name": {
-            "type": "string",
-            "example": "Arun Mehta"
-          },
-          "age": {
-            "type": "string",
-            "example": "54"
-          },
-          "gender": {
-            "type": "string",
-            "example": "Male"
-          },
-          "department": {
-            "type": "string",
-            "example": "Cardiology"
-          },
-          "status": {
-            "type": "string",
-            "example": "Pending",
-            "default": "Pending"
-          },
-          "homStatus": {
-            "type": "string",
-            "example": "Awaiting HOM",
-            "default": "Awaiting HOM"
-          },
-          "doctorId": {
-            "type": "string",
-            "example": "D101"
-          },
-          "date": {
-            "type": "string",
-            "example": "2026-05-10"
-          },
-          "timeSlot": {
-            "type": "string",
-            "example": "9:00 AM - 10:00 AM"
-          },
-          "problem": {
-            "type": "string",
-            "example": "Chest pain"
-          }
-        },
-        "required": [
-          "patientId",
-          "name",
-          "age",
-          "gender",
-          "department",
-          "status",
-          "homStatus",
-          "doctorId",
-          "date",
-          "timeSlot",
-          "problem"
-        ]
-      },
-      "CreateAdmissionDto": {
+      "CreateLedgerDto": {
         "type": "object",
         "properties": {
           "admission_id": {
             "type": "number",
             "example": 701
           },
+          "status": {
+            "type": "string",
+            "example": "OPEN"
+          }
+        },
+        "required": [
+          "admission_id",
+          "status"
+        ]
+      },
+      "CreateLedgerEntryDto": {
+        "type": "object",
+        "properties": {
           "ledger_id": {
             "type": "number",
             "example": 801
           },
-          "patient_name": {
-            "type": "string",
-            "example": "Rahul Verma"
-          },
-          "uhid": {
-            "type": "string",
-            "example": "FED-2026-TEST01"
-          },
-          "ward_no": {
-            "type": "string",
-            "example": "ICU-05"
-          },
-          "doctor_assigned": {
-            "type": "string",
-            "example": "Dr. Qasim"
-          },
-          "coverage": {
+          "service_id": {
             "type": "number",
-            "example": 1500
+            "example": 1
           },
-          "insurance_provider": {
-            "type": "string",
-            "example": "Star Health"
+          "quantity": {
+            "type": "number",
+            "example": 1
           },
-          "discharged": {
-            "type": "boolean",
-            "example": false,
-            "default": false
+          "unit_price": {
+            "type": "number",
+            "example": 500
+          },
+          "amount": {
+            "type": "number",
+            "example": 500
           }
         },
         "required": [
-          "patient_name",
-          "uhid",
-          "ward_no",
-          "doctor_assigned",
-          "coverage",
-          "insurance_provider",
-          "discharged"
+          "ledger_id",
+          "service_id",
+          "quantity",
+          "unit_price",
+          "amount"
         ]
+      },
+      "CreatePaymentDto": {
+        "type": "object",
+        "properties": {
+          "ledger_id": {
+            "type": "number",
+            "example": 801
+          },
+          "amount_paid": {
+            "type": "number",
+            "example": 3100
+          },
+          "payment_mode": {
+            "type": "string",
+            "example": "UPI"
+          }
+        },
+        "required": [
+          "ledger_id",
+          "amount_paid",
+          "payment_mode"
+        ]
+      },
+      "CreateDischargeSummaryDto": {
+        "type": "object",
+        "properties": {
+          "admission_id": {
+            "type": "number",
+            "example": 701
+          },
+          "patient_id": {
+            "type": "number",
+            "example": 201
+          },
+          "discharge_notes": {
+            "type": "string",
+            "example": "Recovered well. Followup in 7 days."
+          },
+          "final_amount": {
+            "type": "number",
+            "example": 15500
+          },
+          "file_path": {
+            "type": "string",
+            "example": "/path/ds_201.pdf"
+          }
+        },
+        "required": [
+          "admission_id",
+          "patient_id",
+          "discharge_notes",
+          "final_amount"
+        ]
+      },
+      "CreateAppointmentDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "number",
+            "description": "The patient ID",
+            "example": 201
+          },
+          "availability_id": {
+            "type": "number",
+            "description": "The doctor availability ID",
+            "example": 501
+          },
+          "scheduled_datetime": {
+            "type": "string",
+            "description": "Scheduled date and time",
+            "example": "2026-03-15T09:30:00Z"
+          },
+          "visit_type": {
+            "type": "string",
+            "description": "Type of visit: OPD, EMERGENCY, or FOLLOWUP",
+            "example": "OPD"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status: PENDING, CONFIRMED, CANCELLED, COMPLETED",
+            "example": "PENDING"
+          },
+          "created_by": {
+            "type": "number",
+            "description": "The user ID who created the appointment",
+            "example": 101
+          }
+        },
+        "required": [
+          "patient_id",
+          "availability_id",
+          "scheduled_datetime",
+          "visit_type",
+          "status",
+          "created_by"
+        ]
+      },
+      "UpdateAppointmentDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "number",
+            "description": "The patient ID",
+            "example": 201
+          },
+          "availability_id": {
+            "type": "number",
+            "description": "The doctor availability ID",
+            "example": 501
+          },
+          "scheduled_datetime": {
+            "type": "string",
+            "description": "Scheduled date and time",
+            "example": "2026-03-15T09:30:00Z"
+          },
+          "visit_type": {
+            "type": "string",
+            "description": "Type of visit: OPD, EMERGENCY, or FOLLOWUP",
+            "example": "OPD"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status: PENDING, CONFIRMED, CANCELLED, COMPLETED",
+            "example": "PENDING"
+          },
+          "created_by": {
+            "type": "number",
+            "description": "The user ID who created the appointment",
+            "example": 101
+          }
+        }
+      },
+      "CreateAdmissionDto": {
+        "type": "object",
+        "properties": {
+          "appointment_id": {
+            "type": "number",
+            "description": "The appointment ID",
+            "example": 601
+          },
+          "patient_id": {
+            "type": "number",
+            "description": "The patient ID",
+            "example": 201
+          },
+          "bed_id": {
+            "type": "number",
+            "description": "The bed ID",
+            "example": 11
+          },
+          "admit_time": {
+            "type": "string",
+            "description": "Admission time",
+            "example": "2026-03-15T10:30:00Z"
+          },
+          "discharge_time": {
+            "type": "string",
+            "description": "Discharge time",
+            "example": "2026-03-18T10:00:00Z"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of admission",
+            "example": "ADMITTED"
+          }
+        },
+        "required": [
+          "appointment_id",
+          "patient_id",
+          "bed_id",
+          "status"
+        ]
+      },
+      "UpdateAdmissionDto": {
+        "type": "object",
+        "properties": {
+          "appointment_id": {
+            "type": "number",
+            "description": "The appointment ID",
+            "example": 601
+          },
+          "patient_id": {
+            "type": "number",
+            "description": "The patient ID",
+            "example": 201
+          },
+          "bed_id": {
+            "type": "number",
+            "description": "The bed ID",
+            "example": 11
+          },
+          "admit_time": {
+            "type": "string",
+            "description": "Admission time",
+            "example": "2026-03-15T10:30:00Z"
+          },
+          "discharge_time": {
+            "type": "string",
+            "description": "Discharge time",
+            "example": "2026-03-18T10:00:00Z"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of admission",
+            "example": "ADMITTED"
+          }
+        }
       }
     }
   }

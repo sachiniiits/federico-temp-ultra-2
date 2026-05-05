@@ -1,5 +1,5 @@
 import { AdmissionService } from './admission.service';
-import { CreateAdmissionDto } from './dto/create-admission.dto';
+import { CreateAdmissionDto, UpdateAdmissionDto } from './dto/create-admission.dto';
 export declare class AdmissionController {
     private readonly admissionService;
     private readonly logger;
@@ -7,15 +7,13 @@ export declare class AdmissionController {
     findAll(): any[];
     findOne(id: string): any;
     create(createAdmissionDto: CreateAdmissionDto): {
+        appointment_id: number;
+        patient_id: number;
+        bed_id: number;
+        admit_time: string;
+        discharge_time?: string;
+        status: string;
         admission_id: number;
-        ledger_id: number;
-        discharged: boolean;
-        patient_name: string;
-        uhid: string;
-        ward_no: string;
-        doctor_assigned: string;
-        coverage: number;
-        insurance_provider: string;
     };
-    update(id: string, update: any): any;
+    update(id: string, update: UpdateAdmissionDto): any;
 }
